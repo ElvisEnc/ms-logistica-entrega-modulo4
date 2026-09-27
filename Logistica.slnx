@@ -8,5 +8,6 @@
   <Folder Name="/tests/">
     <Project Path="tests/Logistica.Application.Tests/Logistica.Application.Tests.csproj" />
     <Project Path="tests/Logistica.Domain.Tests/Logistica.Domain.Tests.csproj" />
+    <Project Path="tests/Logistica.IntegrationTests/Logistica.IntegrationTests.csproj" />
   </Folder>
 </Solution>
