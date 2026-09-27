@@ -1,0 +1,10 @@
+bin/
+obj/
+.vs/
+.vscode/
+*.user
+*.suo
+node_modules/
+.claude/settings.local.json
+.claude/.intentos-cierre
+CLAUDE.local.md

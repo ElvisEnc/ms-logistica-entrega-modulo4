@@ -1,0 +1,1018 @@
+### ms-logistica-entrega — demo.http
+### BC6 · Logística de Entrega · NUR-TRICENTER
+###
+### Flujo completo de punta a punta según docs/DESIGN.md §12 (flujos principales) y §17
+### (Fase 6), con coordenadas reales y dispersas de Santa Cruz de la Sierra: con paradas
+### cercanas la optimización no se aprecia ni en el orden ni en el mapa.
+###
+### Requisitos antes de correr esto de arriba a abajo, EN UNA SOLA PASADA, contra base
+### limpia (GUIA.md, ficha de la Fase 6 — "en trozos no vale: el orden es parte de lo que
+### demuestra"):
+###   1. docker compose up -d                      (postgres, logistica_db)
+###   2. dotnet run --project src/Logistica.WebApi (API en :5060, migra en Development)
+###   3. Extensión "REST Client" (humao.rest-client) de VS Code, para las variables
+###      {{nombreDeRequest.response.body...}} que encadenan una petición con la siguiente.
+###
+### Los paqueteId/pacienteId/contratoCateringId son inventados aquí a propósito: BC6 no
+### geocodifica ni genera estos identificadores, los recibe de BC5 tal cual (§9.11 del
+### maestro). repartidorId, rutaId y paradaId sí nacen dentro de BC6 (Guid.NewGuid() en
+### cada factory, INC-S2) y por eso se capturan de la respuesta, nunca se inventan aquí.
+
+@baseUrl = http://localhost:5060
+
+### ================================================================================
+### Datos de las cuatro paradas del lote principal — HU-37, HU-38, RN-12, RN-17
+### Dispersas a propósito por Santa Cruz de la Sierra para que el vecino-más-cercano
+### tenga algo real que optimizar. Con el origen "Plaza 24 de Septiembre" (§12.4), el
+### recorrido calculado es Equipetrol → Zona Norte → Villa 1ro de Mayo → Plan Tres Mil,
+### es decir el paquete 3 primero y el paquete 2 al final: NINGUNA posición del orden
+### optimizado coincide con la posición en que el paquete fue enviado en el lote.
+### ================================================================================
+
+@paqueteId1 = a0000000-0000-0000-0000-000000000001
+@pacienteId1 = b0000000-0000-0000-0000-000000000001
+@contratoId1 = c0000000-0000-0000-0000-000000000001
+
+@paqueteId2 = a0000000-0000-0000-0000-000000000002
+@pacienteId2 = b0000000-0000-0000-0000-000000000002
+@contratoId2 = c0000000-0000-0000-0000-000000000002
+
+@paqueteId3 = a0000000-0000-0000-0000-000000000003
+@pacienteId3 = b0000000-0000-0000-0000-000000000003
+@contratoId3 = c0000000-0000-0000-0000-000000000003
+
+@paqueteId4 = a0000000-0000-0000-0000-000000000004
+@pacienteId4 = b0000000-0000-0000-0000-000000000004
+@contratoId4 = c0000000-0000-0000-0000-000000000004
+
+@paqueteId5 = a0000000-0000-0000-0000-000000000005
+@pacienteId5 = b0000000-0000-0000-0000-000000000005
+@contratoId5 = c0000000-0000-0000-0000-000000000005
+
+@paqueteId6 = a0000000-0000-0000-0000-000000000006
+@pacienteId6 = b0000000-0000-0000-0000-000000000006
+@contratoId6 = c0000000-0000-0000-0000-000000000006
+
+@paqueteId7 = a0000000-0000-0000-0000-000000000007
+@pacienteId7 = b0000000-0000-0000-0000-000000000007
+@contratoId7 = c0000000-0000-0000-0000-000000000007
+
+@fechaLote1 = 2026-08-25
+@fechaLote2 = 2026-08-26
+@fechaLote3 = 2026-08-27
+
+
+### ================================================================================
+### 1. Registrar dos repartidores — soporte de HU-37, RN-27 (capacidad de reparto)
+### Uno con capacidad 10 (transporta el lote completo) y otro con capacidad 2, que
+### existe únicamente para que el caso negativo de I2 (capacidad) del punto 6 tenga
+### un bloqueo real y no uno simulado.
+### ================================================================================
+
+# @name registrarRepartidor1
+POST {{baseUrl}}/api/repartidores
+Content-Type: application/json
+
+{
+  "nombre": "Carlos Mamani Quispe",
+  "telefono": "70011223",
+  "tipoVehiculo": "Motocicleta",
+  "placa": "1234-ABC",
+  "capacidadPaquetes": 10
+}
+
+###
+
+@repartidorId1 = {{registrarRepartidor1.response.body.$}}
+
+# @name registrarRepartidor2
+POST {{baseUrl}}/api/repartidores
+Content-Type: application/json
+
+{
+  "nombre": "Jorge Quispe Fernandez",
+  "telefono": "70099887",
+  "tipoVehiculo": "Bicicleta electrica",
+  "placa": "BIC-002",
+  "capacidadPaquetes": 2
+}
+
+###
+
+@repartidorId2 = {{registrarRepartidor2.response.body.$}}
+
+
+### ================================================================================
+### 2. POST /api/integracion/paquetes-listos — HU-37, RN-12, RN-13, RN-17, I14
+### Payload literal de SISTEMA.md §9.11: etiqueta como objeto ANIDADO completo (no una
+### cadena) y coordenadas dentro de direccionEntrega, tanto en el paquete como en la
+### etiqueta. Cuatro paquetes dispersos, fecha 2026-08-25.
+### ================================================================================
+
+# @name enviarLote1
+POST {{baseUrl}}/api/integracion/paquetes-listos
+Content-Type: application/json
+
+{
+  "fecha": "{{fechaLote1}}",
+  "paquetes": [
+    {
+      "paqueteId": "{{paqueteId1}}",
+      "pacienteId": "{{pacienteId1}}",
+      "pacienteNombre": "Rosa Fernandez Quiroga",
+      "direccionEntrega": {
+        "calle": "Av. Banzer, 4to Anillo",
+        "zona": "Zona Norte",
+        "ciudad": "Santa Cruz de la Sierra",
+        "referencia": "Frente a Fidalga Norte",
+        "coordenadas": { "latitud": -17.723500, "longitud": -63.174200 }
+      },
+      "contratoCateringId": "{{contratoId1}}",
+      "etiqueta": {
+        "paqueteId": "{{paqueteId1}}",
+        "nombrePaciente": "Rosa Fernandez Quiroga",
+        "nroIdentificacion": "4521178 SC",
+        "direccionEntrega": {
+          "calle": "Av. Banzer, 4to Anillo",
+          "zona": "Zona Norte",
+          "ciudad": "Santa Cruz de la Sierra",
+          "referencia": "Frente a Fidalga Norte",
+          "coordenadas": { "latitud": -17.723500, "longitud": -63.174200 }
+        },
+        "fecha": "{{fechaLote1}}",
+        "codigoQR": "QR-BC5-0001"
+      }
+    },
+    {
+      "paqueteId": "{{paqueteId2}}",
+      "pacienteId": "{{pacienteId2}}",
+      "pacienteNombre": "Miguel Ortiz Vaca",
+      "direccionEntrega": {
+        "calle": "Av. Cristo Redentor",
+        "zona": "Plan Tres Mil, UV 120",
+        "ciudad": "Santa Cruz de la Sierra",
+        "referencia": "A media cuadra del mercado Los Pozos",
+        "coordenadas": { "latitud": -17.830000, "longitud": -63.115000 }
+      },
+      "contratoCateringId": "{{contratoId2}}",
+      "etiqueta": {
+        "paqueteId": "{{paqueteId2}}",
+        "nombrePaciente": "Miguel Ortiz Vaca",
+        "nroIdentificacion": "3897541 SC",
+        "direccionEntrega": {
+          "calle": "Av. Cristo Redentor",
+          "zona": "Plan Tres Mil, UV 120",
+          "ciudad": "Santa Cruz de la Sierra",
+          "referencia": "A media cuadra del mercado Los Pozos",
+          "coordenadas": { "latitud": -17.830000, "longitud": -63.115000 }
+        },
+        "fecha": "{{fechaLote1}}",
+        "codigoQR": "QR-BC5-0002"
+      }
+    },
+    {
+      "paqueteId": "{{paqueteId3}}",
+      "pacienteId": "{{pacienteId3}}",
+      "pacienteNombre": "Elena Vargas Rojas",
+      "direccionEntrega": {
+        "calle": "Calle Los Sauces",
+        "zona": "Equipetrol Norte",
+        "ciudad": "Santa Cruz de la Sierra",
+        "referencia": "Edificio Torres del Poeta, piso 4",
+        "coordenadas": { "latitud": -17.756800, "longitud": -63.198000 }
+      },
+      "contratoCateringId": "{{contratoId3}}",
+      "etiqueta": {
+        "paqueteId": "{{paqueteId3}}",
+        "nombrePaciente": "Elena Vargas Rojas",
+        "nroIdentificacion": "6541239 SC",
+        "direccionEntrega": {
+          "calle": "Calle Los Sauces",
+          "zona": "Equipetrol Norte",
+          "ciudad": "Santa Cruz de la Sierra",
+          "referencia": "Edificio Torres del Poeta, piso 4",
+          "coordenadas": { "latitud": -17.756800, "longitud": -63.198000 }
+        },
+        "fecha": "{{fechaLote1}}",
+        "codigoQR": "QR-BC5-0003"
+      }
+    },
+    {
+      "paqueteId": "{{paqueteId4}}",
+      "pacienteId": "{{pacienteId4}}",
+      "pacienteNombre": "Pedro Salvatierra Justiniano",
+      "direccionEntrega": {
+        "calle": "Calle Warnes",
+        "zona": "Villa 1ro de Mayo",
+        "ciudad": "Santa Cruz de la Sierra",
+        "referencia": null,
+        "coordenadas": { "latitud": -17.825000, "longitud": -63.198000 }
+      },
+      "contratoCateringId": "{{contratoId4}}",
+      "etiqueta": {
+        "paqueteId": "{{paqueteId4}}",
+        "nombrePaciente": "Pedro Salvatierra Justiniano",
+        "nroIdentificacion": "2214578 SC",
+        "direccionEntrega": {
+          "calle": "Calle Warnes",
+          "zona": "Villa 1ro de Mayo",
+          "ciudad": "Santa Cruz de la Sierra",
+          "referencia": null,
+          "coordenadas": { "latitud": -17.825000, "longitud": -63.198000 }
+        },
+        "fecha": "{{fechaLote1}}",
+        "codigoQR": "QR-BC5-0004"
+      }
+    }
+  ]
+}
+
+
+### ================================================================================
+### 3. El MISMO lote otra vez — I12 (idempotencia del único endpoint de integración
+### entrante). Debe responder 200 igual que la primera vez y NO duplicar filas en
+### paquetes_recibidos: el I12 se garantiza IGNORANDO el duplicado, nunca con
+### last-write-wins (si sobrescribiera, un paquete ya asignado a una ruta volvería a
+### POR_ASIGNAR y podría asignarse dos veces, violando I9 en silencio).
+### ================================================================================
+
+POST {{baseUrl}}/api/integracion/paquetes-listos
+Content-Type: application/json
+
+{
+  "fecha": "{{fechaLote1}}",
+  "paquetes": [
+    {
+      "paqueteId": "{{paqueteId1}}",
+      "pacienteId": "{{pacienteId1}}",
+      "pacienteNombre": "Rosa Fernandez Quiroga",
+      "direccionEntrega": {
+        "calle": "Av. Banzer, 4to Anillo",
+        "zona": "Zona Norte",
+        "ciudad": "Santa Cruz de la Sierra",
+        "referencia": "Frente a Fidalga Norte",
+        "coordenadas": { "latitud": -17.723500, "longitud": -63.174200 }
+      },
+      "contratoCateringId": "{{contratoId1}}",
+      "etiqueta": {
+        "paqueteId": "{{paqueteId1}}",
+        "nombrePaciente": "Rosa Fernandez Quiroga",
+        "nroIdentificacion": "4521178 SC",
+        "direccionEntrega": {
+          "calle": "Av. Banzer, 4to Anillo",
+          "zona": "Zona Norte",
+          "ciudad": "Santa Cruz de la Sierra",
+          "referencia": "Frente a Fidalga Norte",
+          "coordenadas": { "latitud": -17.723500, "longitud": -63.174200 }
+        },
+        "fecha": "{{fechaLote1}}",
+        "codigoQR": "QR-BC5-0001"
+      }
+    },
+    {
+      "paqueteId": "{{paqueteId2}}",
+      "pacienteId": "{{pacienteId2}}",
+      "pacienteNombre": "Miguel Ortiz Vaca",
+      "direccionEntrega": {
+        "calle": "Av. Cristo Redentor",
+        "zona": "Plan Tres Mil, UV 120",
+        "ciudad": "Santa Cruz de la Sierra",
+        "referencia": "A media cuadra del mercado Los Pozos",
+        "coordenadas": { "latitud": -17.830000, "longitud": -63.115000 }
+      },
+      "contratoCateringId": "{{contratoId2}}",
+      "etiqueta": {
+        "paqueteId": "{{paqueteId2}}",
+        "nombrePaciente": "Miguel Ortiz Vaca",
+        "nroIdentificacion": "3897541 SC",
+        "direccionEntrega": {
+          "calle": "Av. Cristo Redentor",
+          "zona": "Plan Tres Mil, UV 120",
+          "ciudad": "Santa Cruz de la Sierra",
+          "referencia": "A media cuadra del mercado Los Pozos",
+          "coordenadas": { "latitud": -17.830000, "longitud": -63.115000 }
+        },
+        "fecha": "{{fechaLote1}}",
+        "codigoQR": "QR-BC5-0002"
+      }
+    },
+    {
+      "paqueteId": "{{paqueteId3}}",
+      "pacienteId": "{{pacienteId3}}",
+      "pacienteNombre": "Elena Vargas Rojas",
+      "direccionEntrega": {
+        "calle": "Calle Los Sauces",
+        "zona": "Equipetrol Norte",
+        "ciudad": "Santa Cruz de la Sierra",
+        "referencia": "Edificio Torres del Poeta, piso 4",
+        "coordenadas": { "latitud": -17.756800, "longitud": -63.198000 }
+      },
+      "contratoCateringId": "{{contratoId3}}",
+      "etiqueta": {
+        "paqueteId": "{{paqueteId3}}",
+        "nombrePaciente": "Elena Vargas Rojas",
+        "nroIdentificacion": "6541239 SC",
+        "direccionEntrega": {
+          "calle": "Calle Los Sauces",
+          "zona": "Equipetrol Norte",
+          "ciudad": "Santa Cruz de la Sierra",
+          "referencia": "Edificio Torres del Poeta, piso 4",
+          "coordenadas": { "latitud": -17.756800, "longitud": -63.198000 }
+        },
+        "fecha": "{{fechaLote1}}",
+        "codigoQR": "QR-BC5-0003"
+      }
+    },
+    {
+      "paqueteId": "{{paqueteId4}}",
+      "pacienteId": "{{pacienteId4}}",
+      "pacienteNombre": "Pedro Salvatierra Justiniano",
+      "direccionEntrega": {
+        "calle": "Calle Warnes",
+        "zona": "Villa 1ro de Mayo",
+        "ciudad": "Santa Cruz de la Sierra",
+        "referencia": null,
+        "coordenadas": { "latitud": -17.825000, "longitud": -63.198000 }
+      },
+      "contratoCateringId": "{{contratoId4}}",
+      "etiqueta": {
+        "paqueteId": "{{paqueteId4}}",
+        "nombrePaciente": "Pedro Salvatierra Justiniano",
+        "nroIdentificacion": "2214578 SC",
+        "direccionEntrega": {
+          "calle": "Calle Warnes",
+          "zona": "Villa 1ro de Mayo",
+          "ciudad": "Santa Cruz de la Sierra",
+          "referencia": null,
+          "coordenadas": { "latitud": -17.825000, "longitud": -63.198000 }
+        },
+        "fecha": "{{fechaLote1}}",
+        "codigoQR": "QR-BC5-0004"
+      }
+    }
+  ]
+}
+
+
+### ================================================================================
+### 4. GET /api/paquetes — verifica que el reenvío del punto 3 NO duplicó: CUATRO
+### paquetes POR_ASIGNAR, no ocho. Soporte de HU-37 (consulta previa a crear la ruta).
+### ================================================================================
+
+GET {{baseUrl}}/api/paquetes?fecha={{fechaLote1}}&estado=POR_ASIGNAR
+
+
+### ================================================================================
+### 5. Segundo lote, UN paquete de OTRA fecha — prepara el caso negativo de I10
+### (punto 8). Mismo endpoint, mismo contrato de §9.11.
+### ================================================================================
+
+POST {{baseUrl}}/api/integracion/paquetes-listos
+Content-Type: application/json
+
+{
+  "fecha": "{{fechaLote2}}",
+  "paquetes": [
+    {
+      "paqueteId": "{{paqueteId5}}",
+      "pacienteId": "{{pacienteId5}}",
+      "pacienteNombre": "Lucia Rocha Suarez",
+      "direccionEntrega": {
+        "calle": "Av. Beni",
+        "zona": "La Ramada",
+        "ciudad": "Santa Cruz de la Sierra",
+        "referencia": "Porton verde, casa esquina",
+        "coordenadas": { "latitud": -17.798000, "longitud": -63.219000 }
+      },
+      "contratoCateringId": "{{contratoId5}}",
+      "etiqueta": {
+        "paqueteId": "{{paqueteId5}}",
+        "nombrePaciente": "Lucia Rocha Suarez",
+        "nroIdentificacion": "7784512 SC",
+        "direccionEntrega": {
+          "calle": "Av. Beni",
+          "zona": "La Ramada",
+          "ciudad": "Santa Cruz de la Sierra",
+          "referencia": "Porton verde, casa esquina",
+          "coordenadas": { "latitud": -17.798000, "longitud": -63.219000 }
+        },
+        "fecha": "{{fechaLote2}}",
+        "codigoQR": "QR-BC5-0005"
+      }
+    }
+  ]
+}
+
+
+### ================================================================================
+### 6. POST /api/rutas con el repartidor de capacidad 2 y los cuatro paquetes
+### → 409 I2_REPARTIDOR_NO_DISPONIBLE (capacidad insuficiente, mitad de I2 que vive en
+### CrearRutaCommandHandler — Application, §6.2 DESIGN.md). No toca nada: la excepción
+### se lanza antes de RutaEntrega.Crear y antes de repartidor.AsignarRuta.
+### ================================================================================
+
+POST {{baseUrl}}/api/rutas
+Content-Type: application/json
+
+{
+  "fecha": "{{fechaLote1}}",
+  "repartidorId": "{{repartidorId2}}",
+  "paqueteIds": ["{{paqueteId1}}", "{{paqueteId2}}", "{{paqueteId3}}", "{{paqueteId4}}"]
+}
+
+
+### ================================================================================
+### 7. POST /api/rutas con paqueteIds vacío → 400 I1_RUTA_SIN_PARADAS (RutaEntrega.Crear
+### — Domain). Con el repartidor de capacidad 2, que sigue disponible porque el punto 6
+### no llegó a comprometerlo: existe, sin ruta activa, 0 paquetes caben en capacidad 2,
+### y el propio agregado rechaza una ruta sin paradas.
+### ================================================================================
+
+POST {{baseUrl}}/api/rutas
+Content-Type: application/json
+
+{
+  "fecha": "{{fechaLote1}}",
+  "repartidorId": "{{repartidorId2}}",
+  "paqueteIds": []
+}
+
+
+### ================================================================================
+### 8. POST /api/rutas mezclando un paquete de la fecha correcta con uno de la otra
+### fecha → 400 I10_PAQUETES_FECHA_DISTINTA (CrearRutaCommandHandler — Application).
+### ================================================================================
+
+POST {{baseUrl}}/api/rutas
+Content-Type: application/json
+
+{
+  "fecha": "{{fechaLote1}}",
+  "repartidorId": "{{repartidorId2}}",
+  "paqueteIds": ["{{paqueteId1}}", "{{paqueteId5}}"]
+}
+
+
+### ================================================================================
+### 9. POST /api/rutas con el repartidor de capacidad 10 y los cuatro paquetes → 200,
+### HU-37. Crea RutaEntrega con una ParadaEntrega por paquete (Orden 0, PENDIENTE) y
+### deja al repartidor Disponible=false (I2 · I11).
+### ================================================================================
+
+# @name crearRuta1
+POST {{baseUrl}}/api/rutas
+Content-Type: application/json
+
+{
+  "fecha": "{{fechaLote1}}",
+  "repartidorId": "{{repartidorId1}}",
+  "paqueteIds": ["{{paqueteId1}}", "{{paqueteId2}}", "{{paqueteId3}}", "{{paqueteId4}}"]
+}
+
+###
+
+@rutaId1 = {{crearRuta1.response.body.$}}
+
+
+### ================================================================================
+### 10. POST /api/rutas otra vez para el MISMO repartidor → 409
+### I11_REPARTIDOR_CON_RUTA_ACTIVA (CrearRutaCommandHandler, comprobado antes de tocar
+### el pool de paquetes — §12.1: la causa raíz, no una consecuencia).
+### ================================================================================
+
+POST {{baseUrl}}/api/rutas
+Content-Type: application/json
+
+{
+  "fecha": "{{fechaLote1}}",
+  "repartidorId": "{{repartidorId1}}",
+  "paqueteIds": ["{{paqueteId1}}", "{{paqueteId2}}", "{{paqueteId3}}", "{{paqueteId4}}"]
+}
+
+
+### ================================================================================
+### 11. POST /api/rutas con el OTRO repartidor reusando un paqueteId ya asignado a
+### ruta1 → 409 I9_PAQUETE_YA_ASIGNADO. paqueteId1 ya no está en el pool POR_ASIGNAR
+### (el punto 9 lo marcó ASIGNADO), así que ni siquiera llega a comparar capacidad.
+### ================================================================================
+
+POST {{baseUrl}}/api/rutas
+Content-Type: application/json
+
+{
+  "fecha": "{{fechaLote1}}",
+  "repartidorId": "{{repartidorId2}}",
+  "paqueteIds": ["{{paqueteId1}}"]
+}
+
+
+### ================================================================================
+### 12. POST /api/rutas/{id}/iniciar SIN optimizar → 409 I3_RUTA_NO_OPTIMIZADA
+### (RutaEntrega.Iniciar — Domain). Es la garantía de que ningún repartidor sale sin
+### orden calculado.
+### ================================================================================
+
+POST {{baseUrl}}/api/rutas/{{rutaId1}}/iniciar
+
+
+### ================================================================================
+### 13. POST /api/rutas/{id}/optimizar con el origen —Plaza 24 de Septiembre— en el
+### cuerpo → 200. RutaEntrega.Optimizar corre vecino-más-cercano sobre haversine
+### (§12.4, RN-15, HU-38, I8) y publica RutaOptimizadaGeneradaIntegrationEvent
+### (SISTEMA §9.12): revisar el log de la API para verlo serializado.
+### ================================================================================
+
+POST {{baseUrl}}/api/rutas/{{rutaId1}}/optimizar
+Content-Type: application/json
+
+{
+  "calle": "Plaza 24 de Septiembre",
+  "zona": "Centro",
+  "ciudad": "Santa Cruz de la Sierra",
+  "referencia": "Catedral Basílica Menor San Lorenzo",
+  "latitud": -17.783300,
+  "longitud": -63.182100
+}
+
+
+### ================================================================================
+### 14. GET /api/rutas/{id} — comprobar que el orden 1..4 NO coincide con el orden de
+### envío del punto 2 (paqueteId1..4). Con estas coordenadas el recorrido calculado es
+### Equipetrol(3) → Zona Norte(1) → Villa 1ro de Mayo(4) → Plan Tres Mil(2): la parada
+### con Orden=1 es paqueteId3 (se envió tercero), Orden=2 es paqueteId1 (se envió
+### primero), Orden=3 es paqueteId4 (se envió cuarto) y Orden=4 es paqueteId2 (se envió
+### segundo). Si el orden coincidiera con el de envío, el algoritmo no estaría
+### eligiendo por distancia (§21 GUIA.md — comprobación que no se puede saltar).
+###
+### Abrir además, en el navegador, GET {{baseUrl}}/api/rutas/{{rutaId1}}/mapa — carga
+### Leaflet desde un CDN (necesita Internet, desviación D-14) y dibuja el recorrido
+### numerado.
+### ================================================================================
+
+# @name getRuta1Optimizada
+GET {{baseUrl}}/api/rutas/{{rutaId1}}
+
+###
+
+### El literal dentro del filtro JSONPath es a propósito: anidar {{paqueteIdN}} dentro de
+### otro {{...}} no lo resuelve REST Client (el parser de variables no reentra llaves
+### anidadas), así que aquí van los mismos GUID fijos declarados arriba, escritos a mano.
+
+@paradaId1 = {{getRuta1Optimizada.response.body.$.paradas[?(@.paqueteId=='a0000000-0000-0000-0000-000000000001')].paradaId}}
+@paradaId2 = {{getRuta1Optimizada.response.body.$.paradas[?(@.paqueteId=='a0000000-0000-0000-0000-000000000002')].paradaId}}
+@paradaId3 = {{getRuta1Optimizada.response.body.$.paradas[?(@.paqueteId=='a0000000-0000-0000-0000-000000000003')].paradaId}}
+@paradaId4 = {{getRuta1Optimizada.response.body.$.paradas[?(@.paqueteId=='a0000000-0000-0000-0000-000000000004')].paradaId}}
+
+
+### ================================================================================
+### 15. POST /api/rutas/{id}/iniciar → 200. RutaEntrega.Iniciar exige Optimizada=true
+### (I3) y deja Estado=EN_CAMINO.
+### ================================================================================
+
+POST {{baseUrl}}/api/rutas/{{rutaId1}}/iniciar
+
+
+### ================================================================================
+### 16. POST /api/rutas/{id}/optimizar otra vez → 409 I3_RUTA_NO_PENDIENTE: el orden
+### queda congelado en cuanto el repartidor sale (RutaEntrega.Optimizar exige
+### Estado=PENDIENTE).
+### ================================================================================
+
+POST {{baseUrl}}/api/rutas/{{rutaId1}}/optimizar
+Content-Type: application/json
+
+{
+  "calle": "Plaza 24 de Septiembre",
+  "zona": "Centro",
+  "ciudad": "Santa Cruz de la Sierra",
+  "referencia": "Catedral Basílica Menor San Lorenzo",
+  "latitud": -17.783300,
+  "longitud": -63.182100
+}
+
+
+### ================================================================================
+### 17. POST .../paradas/{id}/confirmar — HU-40. multipart/form-data, tipo=FOTO,
+### archivo real, receptorNombre y latitud/longitud (coordenadasConfirmacion, presente
+### aunque sea opcional — SISTEMA §9.13). Se confirma la parada de Elena Vargas
+### (paqueteId3, Equipetrol) → 200.
+### ================================================================================
+
+# @name confirmarParada3
+POST {{baseUrl}}/api/rutas/{{rutaId1}}/paradas/{{paradaId3}}/confirmar
+Content-Type: multipart/form-data; boundary=BC6Boundary
+
+--BC6Boundary
+Content-Disposition: form-data; name="tipo"
+
+FOTO
+--BC6Boundary
+Content-Disposition: form-data; name="archivo"; filename="evidencia-entrega.jpg"
+Content-Type: image/jpeg
+
+< ./evidencia-entrega.jpg
+--BC6Boundary
+Content-Disposition: form-data; name="receptorNombre"
+
+Elena Vargas Rojas
+--BC6Boundary
+Content-Disposition: form-data; name="latitud"
+
+-17.756800
+--BC6Boundary
+Content-Disposition: form-data; name="longitud"
+
+-63.198000
+--BC6Boundary--
+
+
+### ================================================================================
+### 18. GET /evidencias/{archivo} — la imagen subida en el punto 17. Si da 404, la
+### carpeta "evidencias" se resolvió de dos formas distintas (relativa en un sitio,
+### ContentRootPath en otro — §11.7 DESIGN.md). Se relee la ruta para tomar la URL real
+### con el timestamp que LocalEvidenciaStorage le puso.
+### ================================================================================
+
+# @name getRuta1TrasConfirmar
+GET {{baseUrl}}/api/rutas/{{rutaId1}}
+
+###
+
+@urlEvidenciaParada3 = {{getRuta1TrasConfirmar.response.body.$.paradas[?(@.paqueteId=='a0000000-0000-0000-0000-000000000003')].constancia.urlEvidencia}}
+
+GET {{baseUrl}}{{urlEvidenciaParada3}}
+
+
+### ================================================================================
+### 19. La MISMA parada otra vez → 409 I4_TRANSICION_INVALIDA (ParadaEntrega.EstaResuelta
+### ya es true). Es la prueba de que la evidencia de una entrega confirmada es
+### inmutable: el segundo intento no sobrescribe la constancia, la rechaza (y deja un
+### archivo huérfano en disco, aceptado a propósito — §12.2 DESIGN.md).
+### ================================================================================
+
+POST {{baseUrl}}/api/rutas/{{rutaId1}}/paradas/{{paradaId3}}/confirmar
+Content-Type: multipart/form-data; boundary=BC6Boundary
+
+--BC6Boundary
+Content-Disposition: form-data; name="tipo"
+
+FOTO
+--BC6Boundary
+Content-Disposition: form-data; name="archivo"; filename="evidencia-entrega.jpg"
+Content-Type: image/jpeg
+
+< ./evidencia-entrega.jpg
+--BC6Boundary
+Content-Disposition: form-data; name="receptorNombre"
+
+Elena Vargas Rojas
+--BC6Boundary--
+
+
+### ================================================================================
+### 20. Confirmar OTRA parada (paqueteId2, Miguel Ortiz) SIN archivo → 400
+### EVIDENCIA_ARCHIVO_REQUERIDO. Se comprueba en ConfirmarEntregaCommandHandler ANTES
+### de tocar el repositorio (§10.1 DESIGN.md): la parada queda intacta y se puede
+### resolver de verdad más abajo, en el punto 23.
+### ================================================================================
+
+POST {{baseUrl}}/api/rutas/{{rutaId1}}/paradas/{{paradaId2}}/confirmar
+Content-Type: multipart/form-data; boundary=BC6Boundary
+
+--BC6Boundary
+Content-Disposition: form-data; name="tipo"
+
+FOTO
+--BC6Boundary
+Content-Disposition: form-data; name="receptorNombre"
+
+Miguel Ortiz Vaca
+--BC6Boundary--
+
+
+### ================================================================================
+### 21. POST .../paradas/{id}/incidencia — HU-41, RN-23. motivo=DIRECCION_NO_ENCONTRADA
+### (miembro del enum en SCREAMING_SNAKE_CASE, igual que el contrato — el binding
+### multipart no pasa por JsonStringEnumConverter, §5.5), descripcion y foto adjunta,
+### sobre la parada de Rosa Fernandez (paqueteId1) → 200. En el log de la API debe
+### verse IncidenciaEntregaRegistradaIntegrationEvent con los DIEZ campos de SISTEMA
+### §9.14 — urlFoto incluido — y contratoCateringId1 intacto, leído de la parada y no
+### recalculado ni consultado a BC4.
+### ================================================================================
+
+POST {{baseUrl}}/api/rutas/{{rutaId1}}/paradas/{{paradaId1}}/incidencia
+Content-Type: multipart/form-data; boundary=BC6Boundary
+
+--BC6Boundary
+Content-Disposition: form-data; name="motivo"
+
+DIRECCION_NO_ENCONTRADA
+--BC6Boundary
+Content-Disposition: form-data; name="descripcion"
+
+No se encontro el domicilio indicado en la Zona Norte; el repartidor recorrio la cuadra dos veces sin ubicar el numero.
+--BC6Boundary
+Content-Disposition: form-data; name="archivo"; filename="evidencia-incidencia.jpg"
+Content-Type: image/jpeg
+
+< ./evidencia-incidencia.jpg
+--BC6Boundary--
+
+
+### ================================================================================
+### 22. POST /api/rutas/{id}/completar con paradas sin resolver (paqueteId2 y
+### paqueteId4 siguen PENDIENTE) → 409 I6_PARADAS_PENDIENTES (RutaEntrega.Completar).
+### ================================================================================
+
+POST {{baseUrl}}/api/rutas/{{rutaId1}}/completar
+
+
+### ================================================================================
+### 23. Resolver las dos paradas restantes y completar → 200. El estado final es
+### CON_INCIDENCIAS, no COMPLETADA (I7 lo decide el desenlace, nunca quien llama): la
+### parada de paqueteId1 quedó NO_ENTREGADO en el punto 21.
+### ================================================================================
+
+POST {{baseUrl}}/api/rutas/{{rutaId1}}/paradas/{{paradaId2}}/confirmar
+Content-Type: multipart/form-data; boundary=BC6Boundary
+
+--BC6Boundary
+Content-Disposition: form-data; name="tipo"
+
+FOTO
+--BC6Boundary
+Content-Disposition: form-data; name="archivo"; filename="evidencia-entrega.jpg"
+Content-Type: image/jpeg
+
+< ./evidencia-entrega.jpg
+--BC6Boundary
+Content-Disposition: form-data; name="receptorNombre"
+
+Miguel Ortiz Vaca
+--BC6Boundary
+Content-Disposition: form-data; name="latitud"
+
+-17.830000
+--BC6Boundary
+Content-Disposition: form-data; name="longitud"
+
+-63.115000
+--BC6Boundary--
+
+###
+
+POST {{baseUrl}}/api/rutas/{{rutaId1}}/paradas/{{paradaId4}}/confirmar
+Content-Type: multipart/form-data; boundary=BC6Boundary
+
+--BC6Boundary
+Content-Disposition: form-data; name="tipo"
+
+FIRMA
+--BC6Boundary
+Content-Disposition: form-data; name="archivo"; filename="evidencia-entrega.jpg"
+Content-Type: image/jpeg
+
+< ./evidencia-entrega.jpg
+--BC6Boundary
+Content-Disposition: form-data; name="receptorNombre"
+
+Pedro Salvatierra Justiniano
+--BC6Boundary
+Content-Disposition: form-data; name="latitud"
+
+-17.825000
+--BC6Boundary
+Content-Disposition: form-data; name="longitud"
+
+-63.198000
+--BC6Boundary--
+
+###
+
+# @name completarRuta1
+POST {{baseUrl}}/api/rutas/{{rutaId1}}/completar
+
+###
+
+GET {{baseUrl}}/api/rutas/{{rutaId1}}
+
+
+### ================================================================================
+### 24. GET /api/repartidores?disponibles=true — Carlos Mamani (repartidorId1) vuelve
+### a aparecer disponible: lo liberó LiberarRepartidorAlCompletarRutaPolicy al
+### reaccionar al evento de dominio RutaCompletada, no el handler de completar (I11,
+### §8.2 DESIGN.md).
+### ================================================================================
+
+GET {{baseUrl}}/api/repartidores?disponibles=true
+
+
+### ================================================================================
+### 25. GET /api/entregas?fecha=2026-08-25 — HU-42, estado en vivo de todas las
+### paradas del día.
+### ================================================================================
+
+GET {{baseUrl}}/api/entregas?fecha={{fechaLote1}}
+
+
+### ================================================================================
+### 26. GET /api/constancias — HU-44, buscando por pacienteId (la correlación oficial,
+### D-04 — pacienteNombre es solo un filtro secundario de presentación). Elena Vargas
+### (pacienteId3) tiene una constancia real desde el punto 17.
+### ================================================================================
+
+GET {{baseUrl}}/api/constancias?desde={{fechaLote1}}&hasta={{fechaLote1}}&pacienteId={{pacienteId3}}
+
+
+### ================================================================================
+### 27. Tercer lote y segunda ruta, para el ciclo completo de cancelación (I13) y para
+### el caso negativo de PARADA_NO_ENCONTRADA que la guía deja para el final (punto 28).
+###
+### NOTA de implementación: RutaEntrega.ConfirmarEntrega comprueba Estado==EN_CAMINO
+### ANTES de buscar la parada (RutaEntrega.cs, I4 primero, BuscarParada después). Para
+### que "confirmar sobre un paradaId de otra ruta" devuelva de verdad 400
+### PARADA_NO_ENCONTRADA —y no 409 I4_TRANSICION_INVALIDA, que es lo que darían ruta1
+### (ya CON_INCIDENCIAS) o una ruta2 todavía PENDIENTE— la prueba tiene que ocurrir
+### mientras ruta2 está EN_CAMINO. Por eso se optimiza e inicia ruta2 antes de
+### cancelarla: I13 permite cancelar tanto desde PENDIENTE como desde EN_CAMINO.
+### ================================================================================
+
+POST {{baseUrl}}/api/integracion/paquetes-listos
+Content-Type: application/json
+
+{
+  "fecha": "{{fechaLote3}}",
+  "paquetes": [
+    {
+      "paqueteId": "{{paqueteId6}}",
+      "pacienteId": "{{pacienteId6}}",
+      "pacienteNombre": "Ana Suarez Melgar",
+      "direccionEntrega": {
+        "calle": "Av. Roca y Coronado, 2do Anillo",
+        "zona": "Barrio Sirari",
+        "ciudad": "Santa Cruz de la Sierra",
+        "referencia": null,
+        "coordenadas": { "latitud": -17.770000, "longitud": -63.205000 }
+      },
+      "contratoCateringId": "{{contratoId6}}",
+      "etiqueta": {
+        "paqueteId": "{{paqueteId6}}",
+        "nombrePaciente": "Ana Suarez Melgar",
+        "nroIdentificacion": "9812345 SC",
+        "direccionEntrega": {
+          "calle": "Av. Roca y Coronado, 2do Anillo",
+          "zona": "Barrio Sirari",
+          "ciudad": "Santa Cruz de la Sierra",
+          "referencia": null,
+          "coordenadas": { "latitud": -17.770000, "longitud": -63.205000 }
+        },
+        "fecha": "{{fechaLote3}}",
+        "codigoQR": "QR-BC5-0006"
+      }
+    },
+    {
+      "paqueteId": "{{paqueteId7}}",
+      "pacienteId": "{{pacienteId7}}",
+      "pacienteNombre": "Ruben Paz Gutierrez",
+      "direccionEntrega": {
+        "calle": "Doble Via a La Guardia, Km 8",
+        "zona": "La Guardia",
+        "ciudad": "Santa Cruz de la Sierra",
+        "referencia": "Porton negro frente a la gasolinera",
+        "coordenadas": { "latitud": -17.850000, "longitud": -63.210000 }
+      },
+      "contratoCateringId": "{{contratoId7}}",
+      "etiqueta": {
+        "paqueteId": "{{paqueteId7}}",
+        "nombrePaciente": "Ruben Paz Gutierrez",
+        "nroIdentificacion": "1123456 SC",
+        "direccionEntrega": {
+          "calle": "Doble Via a La Guardia, Km 8",
+          "zona": "La Guardia",
+          "ciudad": "Santa Cruz de la Sierra",
+          "referencia": "Porton negro frente a la gasolinera",
+          "coordenadas": { "latitud": -17.850000, "longitud": -63.210000 }
+        },
+        "fecha": "{{fechaLote3}}",
+        "codigoQR": "QR-BC5-0007"
+      }
+    }
+  ]
+}
+
+###
+
+# @name crearRuta2
+POST {{baseUrl}}/api/rutas
+Content-Type: application/json
+
+{
+  "fecha": "{{fechaLote3}}",
+  "repartidorId": "{{repartidorId2}}",
+  "paqueteIds": ["{{paqueteId6}}", "{{paqueteId7}}"]
+}
+
+###
+
+@rutaId2 = {{crearRuta2.response.body.$}}
+
+###
+
+POST {{baseUrl}}/api/rutas/{{rutaId2}}/optimizar
+Content-Type: application/json
+
+{
+  "calle": "Plaza 24 de Septiembre",
+  "zona": "Centro",
+  "ciudad": "Santa Cruz de la Sierra",
+  "referencia": "Catedral Basílica Menor San Lorenzo",
+  "latitud": -17.783300,
+  "longitud": -63.182100
+}
+
+###
+
+POST {{baseUrl}}/api/rutas/{{rutaId2}}/iniciar
+
+###
+
+### 27.a Confirmar en ruta2 (EN_CAMINO) usando paradaId2, que pertenece a ruta1
+### → 400 PARADA_NO_ENCONTRADA. La ruta pasa el guard de I4 (sí está EN_CAMINO) y
+### falla en RutaEntrega.BuscarParada: paradaId2 no está entre sus paradas. Es
+### Validation → 400, nunca NotFound (§13 DESIGN.md, distinción de ErrorType).
+
+POST {{baseUrl}}/api/rutas/{{rutaId2}}/paradas/{{paradaId2}}/confirmar
+Content-Type: multipart/form-data; boundary=BC6Boundary
+
+--BC6Boundary
+Content-Disposition: form-data; name="tipo"
+
+FOTO
+--BC6Boundary
+Content-Disposition: form-data; name="archivo"; filename="evidencia-entrega.jpg"
+Content-Type: image/jpeg
+
+< ./evidencia-entrega.jpg
+--BC6Boundary
+Content-Disposition: form-data; name="receptorNombre"
+
+Nadie — este intento debe fallar
+--BC6Boundary--
+
+###
+
+### 27.b Cancelar ruta2 SIN motivo → 400 I13_MOTIVO_REQUERIDO (RutaEntrega.Cancelar
+### comprueba primero el estado —EN_CAMINO es cancelable— y luego el motivo).
+
+POST {{baseUrl}}/api/rutas/{{rutaId2}}/cancelar
+Content-Type: application/json
+
+{
+  "motivo": ""
+}
+
+###
+
+### 27.c Cancelar ruta2 CON motivo → 200. Estado=CANCELADA. Las dos paradas
+### (paqueteId6, paqueteId7) seguían PENDIENTE: ReponerPaquetesAlCancelarRutaPolicy
+### las repone a POR_ASIGNAR (I9 por política, §8.2) y LiberarRepartidorAlCancelarRutaPolicy
+### libera a repartidorId2 (I11).
+
+POST {{baseUrl}}/api/rutas/{{rutaId2}}/cancelar
+Content-Type: application/json
+
+{
+  "motivo": "El repartidor reporto una falla mecanica y no puede continuar el recorrido"
+}
+
+###
+
+### 27.d GET /api/paquetes — paqueteId6 y paqueteId7 vuelven a aparecer POR_ASIGNAR
+### para la fecha del lote 3.
+
+GET {{baseUrl}}/api/paquetes?fecha={{fechaLote3}}&estado=POR_ASIGNAR
+
+###
+
+### 27.e Cancelarla de nuevo → 409 I13_RUTA_NO_CANCELABLE (ya está CANCELADA, ni
+### PENDIENTE ni EN_CAMINO).
+
+POST {{baseUrl}}/api/rutas/{{rutaId2}}/cancelar
+Content-Type: application/json
+
+{
+  "motivo": "Segundo intento de cancelacion, debe rechazarse"
+}
+
+
+### ================================================================================
+### 28. GET /api/rutas/{guid inexistente} → 404 RUTA_NO_ENCONTRADA. Es una búsqueda de
+### la RAÍZ del agregado por repositorio (RutaErrors, catálogo declarado en Domain,
+### lanzado desde Application/Infrastructure), distinto de PARADA_NO_ENCONTRADA del
+### punto 27.a, que es una precondición del comando sobre un agregado ya cargado y por
+### eso es 400. Los dos juntos demuestran la distinción de ErrorType de §13 DESIGN.md:
+### NotFound cuando falla encontrar la raíz, Validation cuando la raíz existe pero el
+### comando pide algo que está fuera de sus límites.
+### ================================================================================
+
+GET {{baseUrl}}/api/rutas/00000000-0000-0000-0000-000000000000

@@ -1,0 +1,131 @@
+{
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Bash(dotnet build:*)",
+      "Bash(dotnet test:*)",
+      "Bash(dotnet run:*)",
+      "Bash(dotnet format:*)",
+      "Bash(dotnet restore:*)",
+      "Bash(dotnet new:*)",
+      "Bash(dotnet sln:*)",
+      "Bash(dotnet add:*)",
+      "Bash(dotnet list:*)",
+      "Bash(dotnet ef migrations add:*)",
+      "Bash(dotnet ef migrations list:*)",
+      "Bash(dotnet ef migrations script:*)",
+      "Bash(dotnet ef database update:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git add:*)",
+      "Bash(docker exec nur-tricenter-postgres psql:*)",
+      "PowerShell(dotnet build:*)",
+      "PowerShell(dotnet test:*)",
+      "PowerShell(dotnet run:*)",
+      "PowerShell(dotnet format:*)",
+      "PowerShell(dotnet restore:*)",
+      "PowerShell(dotnet new:*)",
+      "PowerShell(dotnet sln:*)",
+      "PowerShell(dotnet add:*)",
+      "PowerShell(dotnet list:*)",
+      "PowerShell(dotnet ef migrations add:*)",
+      "PowerShell(dotnet ef migrations list:*)",
+      "PowerShell(dotnet ef migrations script:*)",
+      "PowerShell(dotnet ef database update:*)",
+      "PowerShell(git status:*)",
+      "PowerShell(git diff:*)",
+      "PowerShell(git log:*)",
+      "PowerShell(git add:*)",
+      "PowerShell(Get-ChildItem:*)",
+      "PowerShell(Get-Content:*)",
+      "PowerShell(Select-String:*)",
+      "PowerShell(docker exec nur-tricenter-postgres psql:*)"
+    ],
+    "deny": [
+      "Bash(dotnet ef database drop:*)",
+      "Bash(dotnet ef migrations remove:*)",
+      "Bash(docker compose down:*)",
+      "Bash(git push:*)",
+      "Bash(git reset --hard:*)",
+      "Bash(git clean:*)",
+      "PowerShell(dotnet ef database drop:*)",
+      "PowerShell(dotnet ef migrations remove:*)",
+      "PowerShell(docker compose down:*)",
+      "PowerShell(git push:*)",
+      "PowerShell(git reset --hard:*)",
+      "PowerShell(git clean:*)",
+      "PowerShell(Remove-Item:*)",
+      "Read(./.env)",
+      "Read(./**/*.pfx)",
+      "Read(./**/appsettings.Production.json)"
+    ],
+    "ask": [
+      "Bash(git commit:*)",
+      "PowerShell(git commit:*)"
+    ]
+  },
+
+  "env": {
+    "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+    "ASPNETCORE_ENVIRONMENT": "Development"
+  },
+
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe",
+            "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
+                     "${CLAUDE_PROJECT_DIR}/.claude/hooks/incoherencias-abiertas.ps1"],
+            "statusMessage": "Revisando incoherencias abiertas..."
+          }
+        ]
+      }
+    ],
+
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe",
+            "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
+                     "${CLAUDE_PROJECT_DIR}/.claude/hooks/bloquear-destructivos.ps1"],
+            "statusMessage": "Verificando comando..."
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe",
+            "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
+                     "${CLAUDE_PROJECT_DIR}/.claude/hooks/guardian-capas.ps1"],
+            "statusMessage": "Verificando regla de dependencias..."
+          }
+        ]
+      }
+    ],
+
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe",
+            "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
+                     "${CLAUDE_PROJECT_DIR}/.claude/hooks/cierre-de-turno.ps1"],
+            "timeout": 180,
+            "statusMessage": "Compilando y formateando..."
+          }
+        ]
+      }
+    ]
+  }
+}

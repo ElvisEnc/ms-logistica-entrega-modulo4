@@ -1,0 +1,6 @@
+@Logistica.WebApi_HostAddress = http://localhost:5021
+
+GET {{Logistica.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
