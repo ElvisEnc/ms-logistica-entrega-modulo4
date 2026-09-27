@@ -251,10 +251,10 @@ I9, I10, I11, I12 **no** llevan fila aquí a propósito (§6.2): viven en Applic
 
 | Test | Origen | Estado |
 |---|---|---|
-| `Crear_con_latitud_en_el_limite_90_o_menos_90_es_valida` (`[Theory]`) | DESIGN (código) | |
-| `Crear_con_latitud_fuera_de_rango_lanza_COORDENADAS_LATITUD_INVALIDA` (`[Theory]`) | DESIGN (código) | |
-| `Crear_con_longitud_en_el_limite_180_o_menos_180_es_valida` (`[Theory]`) | DESIGN (código) | |
-| `Crear_con_longitud_fuera_de_rango_lanza_COORDENADAS_LONGITUD_INVALIDA` (`[Theory]`) | DESIGN (código) | |
+| `Crear_con_latitud_en_el_limite_90_o_menos_90_es_valida` (`[Theory]`) | DESIGN (código) | Hecho |
+| `Crear_con_latitud_fuera_de_rango_lanza_COORDENADAS_LATITUD_INVALIDA` (`[Theory]`) | DESIGN (código) | Hecho |
+| `Crear_con_longitud_en_el_limite_180_o_menos_180_es_valida` (`[Theory]`) | DESIGN (código) | Hecho |
+| `Crear_con_longitud_fuera_de_rango_lanza_COORDENADAS_LONGITUD_INVALIDA` (`[Theory]`) | DESIGN (código) | Hecho |
 
 **`ConstanciaEntregaTests` — 4**
 
