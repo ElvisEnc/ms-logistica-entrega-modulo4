@@ -5,5 +5,8 @@
     <Project Path="src/Logistica.Infrastructure/Logistica.Infrastructure.csproj" />
     <Project Path="src/Logistica.WebApi/Logistica.WebApi.csproj" />
   </Folder>
-  <Folder Name="/tests/" />
+  <Folder Name="/tests/">
+    <Project Path="tests/Logistica.Application.Tests/Logistica.Application.Tests.csproj" />
+    <Project Path="tests/Logistica.Domain.Tests/Logistica.Domain.Tests.csproj" />
+  </Folder>
 </Solution>

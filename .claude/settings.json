@@ -20,6 +20,9 @@
       "Bash(git log:*)",
       "Bash(git add:*)",
       "Bash(docker exec nur-tricenter-postgres psql:*)",
+      "Bash(reportgenerator:*)",
+      "Bash(powershell -File scripts/test-cobertura.ps1:*)",
+      "mcp__codegraph__*",
       "PowerShell(dotnet build:*)",
       "PowerShell(dotnet test:*)",
       "PowerShell(dotnet run:*)",
@@ -40,7 +43,9 @@
       "PowerShell(Get-ChildItem:*)",
       "PowerShell(Get-Content:*)",
       "PowerShell(Select-String:*)",
-      "PowerShell(docker exec nur-tricenter-postgres psql:*)"
+      "PowerShell(docker exec nur-tricenter-postgres psql:*)",
+      "PowerShell(reportgenerator:*)",
+      "PowerShell(powershell -File scripts/test-cobertura.ps1:*)"
     ],
     "deny": [
       "Bash(dotnet ef database drop:*)",
@@ -69,63 +74,5 @@
   "env": {
     "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
     "ASPNETCORE_ENVIRONMENT": "Development"
-  },
-
-  "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "powershell.exe",
-            "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
-                     "${CLAUDE_PROJECT_DIR}/.claude/hooks/incoherencias-abiertas.ps1"],
-            "statusMessage": "Revisando incoherencias abiertas..."
-          }
-        ]
-      }
-    ],
-
-    "PreToolUse": [
-      {
-        "matcher": "Bash|PowerShell",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "powershell.exe",
-            "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
-                     "${CLAUDE_PROJECT_DIR}/.claude/hooks/bloquear-destructivos.ps1"],
-            "statusMessage": "Verificando comando..."
-          }
-        ]
-      },
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "powershell.exe",
-            "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
-                     "${CLAUDE_PROJECT_DIR}/.claude/hooks/guardian-capas.ps1"],
-            "statusMessage": "Verificando regla de dependencias..."
-          }
-        ]
-      }
-    ],
-
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "powershell.exe",
-            "args": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File",
-                     "${CLAUDE_PROJECT_DIR}/.claude/hooks/cierre-de-turno.ps1"],
-            "timeout": 180,
-            "statusMessage": "Compilando y formateando..."
-          }
-        ]
-      }
-    ]
   }
 }
