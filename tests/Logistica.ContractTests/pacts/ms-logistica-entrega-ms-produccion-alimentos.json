@@ -1,0 +1,123 @@
+{
+  "consumer": {
+    "name": "ms-logistica-entrega"
+  },
+  "interactions": [
+    {
+      "contents": {
+        "content": {
+          "fecha": "2026-03-12",
+          "paquetes": [
+            {
+              "contratoCateringId": "88888888-8888-8888-8888-888888888888",
+              "direccionEntrega": {
+                "calle": "5a Avenida 10-20",
+                "ciudad": "Ciudad de Guatemala",
+                "coordenadas": {
+                  "latitud": 14.6349,
+                  "longitud": -90.5069
+                },
+                "referencia": "Frente al parque",
+                "zona": "Zona 10"
+              },
+              "etiqueta": {
+                "codigoQR": "QR-0001",
+                "direccionEntrega": {
+                  "calle": "5a Avenida 10-20",
+                  "ciudad": "Ciudad de Guatemala",
+                  "coordenadas": {
+                    "latitud": 14.6349,
+                    "longitud": -90.5069
+                  },
+                  "referencia": "Frente al parque",
+                  "zona": "Zona 10"
+                },
+                "fecha": "2026-03-12",
+                "nombrePaciente": "Paciente De Prueba",
+                "nroIdentificacion": "1234567890101",
+                "paqueteId": "66666666-6666-6666-6666-666666666666"
+              },
+              "pacienteId": "77777777-7777-7777-7777-777777777777",
+              "pacienteNombre": "Paciente De Prueba",
+              "paqueteId": "66666666-6666-6666-6666-666666666666"
+            }
+          ]
+        },
+        "contentType": "application/json",
+        "encoded": false
+      },
+      "description": "un lote de paquetes listos con referencia y codigo QR presentes",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "BC5 etiqueto paquetes con todos los campos opcionales"
+        }
+      ],
+      "type": "Asynchronous/Messages"
+    },
+    {
+      "contents": {
+        "content": {
+          "fecha": "2026-03-12",
+          "paquetes": [
+            {
+              "contratoCateringId": "88888888-8888-8888-8888-888888888888",
+              "direccionEntrega": {
+                "calle": "5a Avenida 10-20",
+                "ciudad": "Ciudad de Guatemala",
+                "coordenadas": {
+                  "latitud": 14.6349,
+                  "longitud": -90.5069
+                },
+                "referencia": null,
+                "zona": "Zona 10"
+              },
+              "etiqueta": {
+                "codigoQR": null,
+                "direccionEntrega": {
+                  "calle": "5a Avenida 10-20",
+                  "ciudad": "Ciudad de Guatemala",
+                  "coordenadas": {
+                    "latitud": 14.6349,
+                    "longitud": -90.5069
+                  },
+                  "referencia": null,
+                  "zona": "Zona 10"
+                },
+                "fecha": "2026-03-12",
+                "nombrePaciente": "Paciente De Prueba",
+                "nroIdentificacion": "1234567890101",
+                "paqueteId": "66666666-6666-6666-6666-666666666666"
+              },
+              "pacienteId": "77777777-7777-7777-7777-777777777777",
+              "pacienteNombre": "Paciente De Prueba",
+              "paqueteId": "66666666-6666-6666-6666-666666666666"
+            }
+          ]
+        },
+        "contentType": "application/json",
+        "encoded": false
+      },
+      "description": "un lote de paquetes listos sin referencia ni codigo QR",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "BC5 etiqueto paquetes sin los campos opcionales"
+        }
+      ],
+      "type": "Asynchronous/Messages"
+    }
+  ],
+  "metadata": {
+    "pactRust": {
+      "ffi": "0.4.27",
+      "models": "1.2.8"
+    },
+    "pactSpecification": {
+      "version": "4.0"
+    }
+  },
+  "provider": {
+    "name": "ms-produccion-alimentos"
+  }
+}

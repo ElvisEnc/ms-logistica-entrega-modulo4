@@ -374,6 +374,22 @@ campo, sin aplanar.** `EntregaConfirmada` lleva la constancia como objeto **anid
 tres está cubierto por su propio test de contrato en `Logistica.Application.Tests`, incluidos
 los casos de campo opcional en `null`.
 
+**Contract testing (Pact).** Además de esos tests de serialización, `tests/Logistica.ContractTests`
+verifica con **PactNet 5** el acuerdo real con las otras dos puntas del sistema (`docs/SISTEMA.md`
+§13.5): como **consumidor** de `ms-produccion-alimentos` (`PaquetesListosParaEntrega`, message
+pact real, pasa por el handler real) y como **proveedor** de `ms-pacientes`
+(`EntregaConfirmada` + `IncidenciaEntregaRegistrada`) y `ms-catering`
+(`IncidenciaEntregaRegistrada`) — estos dos últimos por **Pact HTTP** sobre un shim de solo test
+(`tests/Logistica.ContractTests/Testing/PactProviderHost.cs`), porque PactNet 5.0.0/5.0.1 tiene
+un bug abierto que bloquea la verificación de proveedor en modo mensaje
+([pact-net#558](https://github.com/pact-foundation/pact-net/issues/558), ver `docs/INCOHERENCIAS.md`
+INC-2). Los pactos de esos dos pares se autoran en este repositorio como "bootstrap" en nombre
+del consumidor externo, hasta que ese repositorio implemente su propia suite. Ejecutar:
+`dotnet test --filter Capa=Contrato`. Detalle completo, mapa de pares e interacciones, y la
+evidencia de que el proceso de revisión con IA detecta incumplimientos reales:
+`docs/testing/MAPA-CONTRACT-TESTS.md` y `docs/testing/validacion-entorno-contract-tests.md`.
+Intercambio de pactos con los repositorios hermanos: `scripts/publicar-pacts.ps1`.
+
 ## 8. Algoritmo de optimización
 
 `RutaEntrega.Optimizar(origen)` calcula el orden de visita con la heurística del

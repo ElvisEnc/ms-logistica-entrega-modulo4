@@ -5,3 +5,4 @@
 // del mismo proceso, y los tests de Application los construyen directamente.
 [assembly: InternalsVisibleTo("Logistica.Application.Tests")]
 [assembly: InternalsVisibleTo("Logistica.WebApi")]
+[assembly: InternalsVisibleTo("Logistica.ContractTests")]
