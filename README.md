@@ -408,7 +408,30 @@ un resultado no reproducible y una dependencia del dominio hacia un proveedor, a
 mejora que el enunciado no pide (determinar la ruta, no minimizarla de forma óptima). El
 detalle completo, con las alternativas descartadas y su costo, está en §18.2 `docs/DESIGN.md`.
 
-## 9. Puesta en marcha
+## 9. Testing
+
+Tres niveles, cada uno con su orquestador de generación (`/unit-tests`, `/integration-tests`,
+`/contract-tests`), su regla (`.claude/rules/*-tests.md`) y su mapa de avance:
+
+| Nivel | Casos | Mapa | Comando |
+|---|---|---|---|
+| Unit (Domain + Application) | 112 + 32 | `docs/testing/MAPA-UNIT-TESTS.md` | `dotnet test --filter Capa=Unit` |
+| Integración (F1-RutaOptimizada, F2-ConfirmacionDeEntrega, F3-Incidencia; camino correcto e incorrecto) | 8 | `docs/testing/MAPA-INTEGRATION-TESTS.md` | `dotnet test --filter Capa=Integracion` (requiere Docker) |
+| Contrato (Pact) | 4 (1 consumidor real + 3 proveedor vía shim) | `docs/testing/MAPA-CONTRACT-TESTS.md` | `dotnet test --filter Capa=Contrato` |
+
+**Cobertura:** 93.8% líneas / 93.7% ramas sobre Domain+Application (umbral exigido: 80%).
+Reporte HTML completo en `docs/testing/coverage/index.html`; regenerar con
+`powershell -File scripts/test-cobertura.ps1`.
+
+**Evidencia de rigor del proceso de generación con IA:** `docs/testing/validacion-entorno.md`
+(unit tests) y `docs/testing/validacion-entorno-contract-tests.md` (contract tests) documentan
+una prueba de sabotaje: una copia con violaciones introducidas a propósito, para confirmar que
+el agente revisor (`test-reviewer` / `pact-reviewer`) las detecta en vez de aprobar por defecto.
+
+**Guía de defensa técnica:** `docs/testing/defensa/INDICE.md` explica, test por test, qué
+invariante o flujo cubre y por qué está diseñado así.
+
+## 10. Puesta en marcha
 
 ```bash
 # Levanta PostgreSQL (contenedor nur-tricenter-postgres, base logistica_db, puerto 5432)
