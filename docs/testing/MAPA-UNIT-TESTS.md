@@ -157,35 +157,35 @@ ejercita a través de los tres handlers de arriba, no por separado.
 
 | # | Invariante | Test | Origen | Estado |
 |---|---|---|---|---|
-| 1 | I1 | `Crear_con_lista_vacia_lanza_I1_RUTA_SIN_PARADAS` | DESIGN | |
-| 2 | I1 | `Crear_con_paquetes_nace_pendiente_con_una_parada_por_paquete` | DESIGN | |
-| 3 | I2 | `AsignarRuta_sobre_no_disponible_lanza_I2_REPARTIDOR_NO_DISPONIBLE` | DESIGN | |
-| 4 | I2 | `TieneCapacidadPara_cantidad_igual_a_la_capacidad_es_true` | DESIGN | |
-| 5 | I2 | `TieneCapacidadPara_cantidad_mayor_a_la_capacidad_es_false` | DESIGN | |
-| 6 | I3 | `Optimizar_sobre_ruta_no_pendiente_lanza_I3_RUTA_NO_PENDIENTE` | DESIGN | |
-| 7 | I3 | `Iniciar_sobre_ruta_no_optimizada_lanza_I3_RUTA_NO_OPTIMIZADA` | DESIGN | |
-| 8 | I3 | `Iniciar_sobre_ruta_no_pendiente_lanza_I3_RUTA_NO_PENDIENTE` | DESIGN | |
-| 9 | I4 | `ConfirmarEntrega_sobre_ruta_no_en_camino_lanza_I4_TRANSICION_INVALIDA` | DESIGN | |
-| 10 | I4 | `ReportarIncidencia_sobre_ruta_no_en_camino_lanza_I4_TRANSICION_INVALIDA` | DESIGN | |
-| 11 | I4 | `ConfirmarEntrega_sobre_parada_ya_resuelta_lanza_I4_TRANSICION_INVALIDA` | DESIGN | |
-| 12 | I5 | `ConfirmarEntrega_con_constancia_pasa_a_ENTREGADO_y_deja_incidencia_nula` | DESIGN | |
-| 13 | I5 | `ReportarIncidencia_con_incidencia_pasa_a_NO_ENTREGADO_y_deja_constancia_nula` | DESIGN | |
-| 14 | I5 | `ConfirmarEntrega_sobre_ruta_en_camino_deja_Incidencia_en_null_I5` | DESIGN | |
-| 15 | I5 | `ReportarIncidencia_sobre_ruta_en_camino_deja_Constancia_en_null_I5` | DESIGN | |
-| 16 | I5 | `ConfirmarEntrega_con_constancia_nula_lanza_I5_CONSTANCIA_REQUERIDA` | DESIGN | |
-| 17 | I5 | `ReportarIncidencia_con_incidencia_nula_lanza_I5_INCIDENCIA_REQUERIDA` | DESIGN | |
-| 18 | I6 | `Completar_con_paradas_pendientes_lanza_I6_PARADAS_PENDIENTES` | DESIGN | |
-| 19 | I7 | `Completar_con_todas_ENTREGADO_da_COMPLETADA_I7` | DESIGN | |
-| 20 | I7 | `Completar_con_una_NO_ENTREGADO_da_CON_INCIDENCIAS_I7` | DESIGN | |
-| 21 | I8 | `Optimizar_con_tres_paradas_asigna_ordenes_1_a_n_sin_repetir_I8` | DESIGN | |
-| 22 | I8 | `AsignarOrden_menor_a_uno_lanza_I8_ORDEN_PARADAS_INVALIDO` | DESIGN | |
-| 23 | I13 | `Cancelar_con_motivo_vacio_lanza_I13_MOTIVO_REQUERIDO` | DESIGN | |
-| 24 | I13 | `Cancelar_ruta_ya_CANCELADA_lanza_I13_RUTA_NO_CANCELABLE` | DESIGN | |
-| 25 | I13 | `Cancelar_ruta_COMPLETADA_lanza_I13_RUTA_NO_CANCELABLE` | DESIGN | |
-| 26 | I13 | `Cancelar_desde_pendiente_pasa_a_CANCELADA_y_emite_RutaCancelada_con_todos_los_paquetes` | DESIGN | |
-| 27 | I14 | `ReportarIncidencia_conserva_PacienteId_y_ContratoCateringId_en_el_evento_I14` | DESIGN | |
-| 28 | I14 | `PacienteId_nulo_lanza_PAQUETE_RUTA_PACIENTE_ID_REQUERIDO` (`PaqueteParaRutaTests`) | DESIGN | |
-| 29 | I14 | `ContratoCateringId_nulo_lanza_PAQUETE_RUTA_CONTRATO_CATERING_REQUERIDO` (`PaqueteParaRutaTests`) | DESIGN | |
+| 1 | I1 | `Crear_con_lista_vacia_lanza_I1_RUTA_SIN_PARADAS` | DESIGN | Hecho |
+| 2 | I1 | `Crear_con_paquetes_nace_pendiente_con_una_parada_por_paquete` | DESIGN | Hecho |
+| 3 | I2 | `AsignarRuta_sobre_no_disponible_lanza_I2_REPARTIDOR_NO_DISPONIBLE` | DESIGN | Hecho |
+| 4 | I2 | `TieneCapacidadPara_cantidad_igual_a_la_capacidad_es_true` | DESIGN | Hecho |
+| 5 | I2 | `TieneCapacidadPara_cantidad_mayor_a_la_capacidad_es_false` | DESIGN | Hecho |
+| 6 | I3 | `Optimizar_sobre_ruta_no_pendiente_lanza_I3_RUTA_NO_PENDIENTE` | DESIGN | Hecho |
+| 7 | I3 | `Iniciar_sobre_ruta_no_optimizada_lanza_I3_RUTA_NO_OPTIMIZADA` | DESIGN | Hecho |
+| 8 | I3 | `Iniciar_sobre_ruta_no_pendiente_lanza_I3_RUTA_NO_PENDIENTE` | DESIGN | Hecho |
+| 9 | I4 | `ConfirmarEntrega_sobre_ruta_no_en_camino_lanza_I4_TRANSICION_INVALIDA` | DESIGN | Hecho |
+| 10 | I4 | `ReportarIncidencia_sobre_ruta_no_en_camino_lanza_I4_TRANSICION_INVALIDA` | DESIGN | Hecho |
+| 11 | I4 | `ConfirmarEntrega_sobre_parada_ya_resuelta_lanza_I4_TRANSICION_INVALIDA` | DESIGN | Hecho |
+| 12 | I5 | `ConfirmarEntrega_con_constancia_pasa_a_ENTREGADO_y_deja_incidencia_nula` | DESIGN | Hecho |
+| 13 | I5 | `ReportarIncidencia_con_incidencia_pasa_a_NO_ENTREGADO_y_deja_constancia_nula` | DESIGN | Hecho |
+| 14 | I5 | `ConfirmarEntrega_sobre_ruta_en_camino_deja_Incidencia_en_null_I5` | DESIGN | Hecho |
+| 15 | I5 | `ReportarIncidencia_sobre_ruta_en_camino_deja_Constancia_en_null_I5` | DESIGN | Hecho |
+| 16 | I5 | `ConfirmarEntrega_con_constancia_nula_lanza_I5_CONSTANCIA_REQUERIDA` | DESIGN | Hecho |
+| 17 | I5 | `ReportarIncidencia_con_incidencia_nula_lanza_I5_INCIDENCIA_REQUERIDA` | DESIGN | Hecho |
+| 18 | I6 | `Completar_con_paradas_pendientes_lanza_I6_PARADAS_PENDIENTES` | DESIGN | Hecho |
+| 19 | I7 | `Completar_con_todas_ENTREGADO_da_COMPLETADA_I7` | DESIGN | Hecho |
+| 20 | I7 | `Completar_con_una_NO_ENTREGADO_da_CON_INCIDENCIAS_I7` | DESIGN | Hecho |
+| 21 | I8 | `Optimizar_con_tres_paradas_asigna_ordenes_1_a_n_sin_repetir_I8` | DESIGN | Hecho |
+| 22 | I8 | `AsignarOrden_menor_a_uno_lanza_I8_ORDEN_PARADAS_INVALIDO` | DESIGN | Hecho |
+| 23 | I13 | `Cancelar_con_motivo_vacio_lanza_I13_MOTIVO_REQUERIDO` | DESIGN | Hecho |
+| 24 | I13 | `Cancelar_ruta_ya_CANCELADA_lanza_I13_RUTA_NO_CANCELABLE` | DESIGN | Hecho |
+| 25 | I13 | `Cancelar_ruta_COMPLETADA_lanza_I13_RUTA_NO_CANCELABLE` | DESIGN | Hecho |
+| 26 | I13 | `Cancelar_desde_pendiente_pasa_a_CANCELADA_y_emite_RutaCancelada_con_todos_los_paquetes` | DESIGN | Hecho |
+| 27 | I14 | `ReportarIncidencia_conserva_PacienteId_y_ContratoCateringId_en_el_evento_I14` | DESIGN | Hecho |
+| 28 | I14 | `PacienteId_nulo_lanza_PAQUETE_RUTA_PACIENTE_ID_REQUERIDO` (`PaqueteParaRutaTests`) | DESIGN | Hecho |
+| 29 | I14 | `ContratoCateringId_nulo_lanza_PAQUETE_RUTA_CONTRATO_CATERING_REQUERIDO` (`PaqueteParaRutaTests`) | DESIGN | Hecho |
 
 I9, I10, I11, I12 **no** llevan fila aquí a propósito (§6.2): viven en Application, sección 4.3.
 
@@ -195,32 +195,32 @@ I9, I10, I11, I12 **no** llevan fila aquí a propósito (§6.2): viven en Applic
 
 | Test | Origen | Estado |
 |---|---|---|
-| `Optimizar_calcula_distancia_y_tiempo_estimado_correctos` | DESIGN | |
-| `Optimizar_emite_RutaOptimizadaGenerada_con_las_paradas_ordenadas` | DESIGN | |
-| `Optimizar_ejecutado_dos_veces_recalcula_desde_cero` | DESIGN | |
-| `Optimizar_con_paradas_reales_de_Santa_Cruz_produce_el_orden_esperado` | DESIGN | |
+| `Optimizar_calcula_distancia_y_tiempo_estimado_correctos` | DESIGN | Hecho |
+| `Optimizar_emite_RutaOptimizadaGenerada_con_las_paradas_ordenadas` | DESIGN | Hecho |
+| `Optimizar_ejecutado_dos_veces_recalcula_desde_cero` | DESIGN | Hecho |
+| `Optimizar_con_paradas_reales_de_Santa_Cruz_produce_el_orden_esperado` | DESIGN | Hecho |
 
 **`ParadaEntregaTests` — 11 (6 ya en 4.1 + 5 aquí)**
 
 | Test | Origen | Estado |
 |---|---|---|
-| `Nace_pendiente_con_orden_cero_y_direccion_clonada` | DESIGN | |
-| `MarcarEnCamino_pasa_de_PENDIENTE_a_EN_CAMINO` | DESIGN | |
-| `ReportarIncidencia_sobre_parada_ya_resuelta_lanza_I4_TRANSICION_INVALIDA` (simétrico de la fila 11 de 4.1, que solo cubre `ConfirmarEntrega`) | Derivado | |
-| `AsignarOrden_con_valor_valido_fija_Orden` | Derivado | |
-| `EstaResuelta_es_false_en_PENDIENTE_o_EN_CAMINO_y_true_en_ENTREGADO_o_NO_ENTREGADO` (`[Theory]`, UT-05) | Derivado | |
+| `Nace_pendiente_con_orden_cero_y_direccion_clonada` | DESIGN | Hecho |
+| `MarcarEnCamino_pasa_de_PENDIENTE_a_EN_CAMINO` | DESIGN | Hecho |
+| `ReportarIncidencia_sobre_parada_ya_resuelta_lanza_I4_TRANSICION_INVALIDA` (simétrico de la fila 11 de 4.1, que solo cubre `ConfirmarEntrega`) | Derivado | Hecho |
+| `AsignarOrden_con_valor_valido_fija_Orden` | Derivado | Hecho |
+| `EstaResuelta_es_false_en_PENDIENTE_o_EN_CAMINO_y_true_en_ENTREGADO_o_NO_ENTREGADO` (`[Theory]`, UT-05) | Derivado | Hecho |
 
 **`RepartidorTests` — 10 (3 ya en 4.1 + 7 aquí)**
 
 | Test | Origen | Estado |
 |---|---|---|
-| `Liberar_es_idempotente_y_no_lanza_si_ya_estaba_disponible` | DESIGN | |
-| `Registrar_con_nombre_vacio_lanza_REPARTIDOR_NOMBRE_REQUERIDO` | DESIGN (código) | |
-| `Registrar_con_telefono_vacio_lanza_REPARTIDOR_TELEFONO_REQUERIDO` | DESIGN (código) | |
-| `Registrar_con_vehiculo_nulo_lanza_REPARTIDOR_VEHICULO_REQUERIDO` | DESIGN (código) | |
-| `Registrar_con_datos_validos_crea_el_repartidor_disponible` | Derivado | |
-| `AsignarRuta_sobre_disponible_lo_marca_no_disponible` | Derivado | |
-| `Liberar_sobre_no_disponible_lo_marca_disponible` | Derivado | |
+| `Liberar_es_idempotente_y_no_lanza_si_ya_estaba_disponible` | DESIGN | Hecho |
+| `Registrar_con_nombre_vacio_lanza_REPARTIDOR_NOMBRE_REQUERIDO` | DESIGN (código) | Hecho |
+| `Registrar_con_telefono_vacio_lanza_REPARTIDOR_TELEFONO_REQUERIDO` | DESIGN (código) | Hecho |
+| `Registrar_con_vehiculo_nulo_lanza_REPARTIDOR_VEHICULO_REQUERIDO` | DESIGN (código) | Hecho |
+| `Registrar_con_datos_validos_crea_el_repartidor_disponible` | Derivado | Hecho |
+| `AsignarRuta_sobre_disponible_lo_marca_no_disponible` | Derivado | Hecho |
+| `Liberar_sobre_no_disponible_lo_marca_disponible` | Derivado | Hecho |
 
 > **Nota:** 3 (ya contadas en 4.1) + 1 (`Liberar_...idempotente`) + 3 (validaciones
 > de `Registrar`) + 3 (derivadas) = 10. Cuadra con el total declarado.
@@ -229,23 +229,23 @@ I9, I10, I11, I12 **no** llevan fila aquí a propósito (§6.2): viven en Applic
 
 | Test | Origen | Estado |
 |---|---|---|
-| `PaqueteId_nulo_lanza_PAQUETE_RUTA_PAQUETE_ID_REQUERIDO` | DESIGN (código) | |
-| `PacienteNombre_vacio_lanza_PAQUETE_RUTA_PACIENTE_NOMBRE_REQUERIDO` | DESIGN (código) | |
-| `DireccionEntrega_nula_lanza_PAQUETE_RUTA_DIRECCION_REQUERIDA` | DESIGN (código) | |
-| `Crear_con_todos_los_campos_validos_construye_el_paquete` | Derivado | |
+| `PaqueteId_nulo_lanza_PAQUETE_RUTA_PAQUETE_ID_REQUERIDO` | DESIGN (código) | Hecho |
+| `PacienteNombre_vacio_lanza_PAQUETE_RUTA_PACIENTE_NOMBRE_REQUERIDO` | DESIGN (código) | Hecho |
+| `DireccionEntrega_nula_lanza_PAQUETE_RUTA_DIRECCION_REQUERIDA` | DESIGN (código) | Hecho |
+| `Crear_con_todos_los_campos_validos_construye_el_paquete` | Derivado | Hecho |
 
 **`DireccionGeoTests` — 8**
 
 | Test | Origen | Estado |
 |---|---|---|
-| `Crear_con_calle_vacia_lanza_DIRECCION_CALLE_REQUERIDA` | DESIGN (código) | |
-| `Crear_con_zona_vacia_lanza_DIRECCION_ZONA_REQUERIDA` | DESIGN (código) | |
-| `Crear_con_ciudad_vacia_lanza_DIRECCION_CIUDAD_REQUERIDA` | DESIGN (código) | |
-| `Crear_con_coordenadas_nulas_lanza_DIRECCION_COORDENADAS_REQUERIDAS` (RN-15) | DESIGN (código) | |
-| `Referencia_es_opcional` | DESIGN | |
-| `DistanciaHasta_el_mismo_punto_es_cero` | DESIGN | |
-| `DistanciaHasta_un_grado_de_latitud_en_el_ecuador_da_aproximadamente_111_19_km` | DESIGN | |
-| `Clonar_produce_una_instancia_equivalente_pero_con_Coordenadas_propia` | DESIGN | |
+| `Crear_con_calle_vacia_lanza_DIRECCION_CALLE_REQUERIDA` | DESIGN (código) | Hecho |
+| `Crear_con_zona_vacia_lanza_DIRECCION_ZONA_REQUERIDA` | DESIGN (código) | Hecho |
+| `Crear_con_ciudad_vacia_lanza_DIRECCION_CIUDAD_REQUERIDA` | DESIGN (código) | Hecho |
+| `Crear_con_coordenadas_nulas_lanza_DIRECCION_COORDENADAS_REQUERIDAS` (RN-15) | DESIGN (código) | Hecho |
+| `Referencia_es_opcional` | DESIGN | Hecho |
+| `DistanciaHasta_el_mismo_punto_es_cero` | DESIGN | Hecho |
+| `DistanciaHasta_un_grado_de_latitud_en_el_ecuador_da_aproximadamente_111_19_km` | DESIGN | Hecho |
+| `Clonar_produce_una_instancia_equivalente_pero_con_Coordenadas_propia` | DESIGN | Hecho |
 
 **`CoordenadasTests` — 4**
 
@@ -260,36 +260,36 @@ I9, I10, I11, I12 **no** llevan fila aquí a propósito (§6.2): viven en Applic
 
 | Test | Origen | Estado |
 |---|---|---|
-| `Crear_con_url_evidencia_vacia_lanza_CONSTANCIA_URL_REQUERIDA` | DESIGN (código) | |
-| `Crear_con_receptor_nombre_vacio_lanza_CONSTANCIA_RECEPTOR_REQUERIDO` | DESIGN (código) | |
-| `CoordenadasConfirmacion_es_opcional` | DESIGN | |
-| `Crear_con_todos_los_campos_validos_construye_la_constancia` | Derivado | |
+| `Crear_con_url_evidencia_vacia_lanza_CONSTANCIA_URL_REQUERIDA` | DESIGN (código) | Hecho |
+| `Crear_con_receptor_nombre_vacio_lanza_CONSTANCIA_RECEPTOR_REQUERIDO` | DESIGN (código) | Hecho |
+| `CoordenadasConfirmacion_es_opcional` | DESIGN | Hecho |
+| `Crear_con_todos_los_campos_validos_construye_la_constancia` | Derivado | Hecho |
 
 **`IncidenciaEntregaTests` — 3**
 
 | Test | Origen | Estado |
 |---|---|---|
-| `Crear_con_descripcion_vacia_lanza_INCIDENCIA_DESCRIPCION_REQUERIDA` | DESIGN (código) | |
-| `UrlFoto_es_opcional` | DESIGN | |
-| `Crear_con_todos_los_campos_validos_construye_la_incidencia` | Derivado | |
+| `Crear_con_descripcion_vacia_lanza_INCIDENCIA_DESCRIPCION_REQUERIDA` | DESIGN (código) | Hecho |
+| `UrlFoto_es_opcional` | DESIGN | Hecho |
+| `Crear_con_todos_los_campos_validos_construye_la_incidencia` | Derivado | Hecho |
 
 **`VehiculoTests` — 4**
 
 | Test | Origen | Estado |
 |---|---|---|
-| `Crear_con_tipo_vacio_lanza_VEHICULO_TIPO_REQUERIDO` | DESIGN (código) | |
-| `Crear_con_placa_vacia_lanza_VEHICULO_PLACA_REQUERIDA` | DESIGN (código) | |
-| `Crear_con_capacidad_menor_o_igual_a_cero_lanza_VEHICULO_CAPACIDAD_INVALIDA` | DESIGN (código) | |
-| `Crear_con_datos_validos_construye_el_vehiculo` | Derivado | |
+| `Crear_con_tipo_vacio_lanza_VEHICULO_TIPO_REQUERIDO` | DESIGN (código) | Hecho |
+| `Crear_con_placa_vacia_lanza_VEHICULO_PLACA_REQUERIDA` | DESIGN (código) | Hecho |
+| `Crear_con_capacidad_menor_o_igual_a_cero_lanza_VEHICULO_CAPACIDAD_INVALIDA` | DESIGN (código) | Hecho |
+| `Crear_con_datos_validos_construye_el_vehiculo` | Derivado | Hecho |
 
 **`TypedIdTests` — 19 (`[Theory]` parametrizado por los 6 IDs donde aplique)**
 
 | Test | Origen | Estado |
 |---|---|---|
-| `New_genera_un_id_valido` × 6 (uno por `RutaId`, `ParadaId`, `RepartidorId`, `PaqueteId`, `PacienteId`, `ContratoId`) | DESIGN (código) | |
-| `From_con_guid_valido_lo_envuelve` × 6 | DESIGN (código) | |
-| `From_con_Guid_Empty_lanza_ID_VACIO` × 6 | DESIGN (código) | |
-| `Dos_ids_con_el_mismo_Guid_son_iguales_por_valor` (igualdad estructural de `sealed record`) | DESIGN | |
+| `New_genera_un_id_valido` × 6 (uno por `RutaId`, `ParadaId`, `RepartidorId`, `PaqueteId`, `PacienteId`, `ContratoId`) | DESIGN (código) | Hecho |
+| `From_con_guid_valido_lo_envuelve` × 6 | DESIGN (código) | Hecho |
+| `From_con_Guid_Empty_lanza_ID_VACIO` × 6 | DESIGN (código) | Hecho |
+| `Dos_ids_con_el_mismo_Guid_son_iguales_por_valor` (igualdad estructural de `sealed record`) | DESIGN | Hecho |
 
 18 + 1 = 19.
 
@@ -299,45 +299,45 @@ I9, I10, I11, I12 **no** llevan fila aquí a propósito (§6.2): viven en Applic
 
 | Test | Origen | Estado |
 |---|---|---|
-| `CrearRutaCommandHandlerTests.Handle_repartidor_sin_capacidad_lanza_I2_REPARTIDOR_NO_DISPONIBLE` | DESIGN | |
-| `CrearRutaCommandHandlerTests.Handle_paquete_no_esta_POR_ASIGNAR_lanza_I9_PAQUETE_YA_ASIGNADO` | DESIGN | |
-| `CrearRutaCommandHandlerTests.Handle_paquete_con_fecha_distinta_lanza_I10_PAQUETES_FECHA_DISTINTA` | DESIGN | |
-| `CrearRutaCommandHandlerTests.Handle_repartidor_con_ruta_activa_lanza_I11_REPARTIDOR_CON_RUTA_ACTIVA` | DESIGN | |
-| `CrearRutaCommandHandlerTests.Handle_repartidor_inexistente_lanza_REPARTIDOR_NO_ENCONTRADO` | DESIGN | |
-| `CrearRutaCommandHandlerTests.Handle_caso_feliz_crea_la_ruta_asigna_al_repartidor_y_marca_los_paquetes` | DESIGN | |
-| `ConfirmarEntregaHandlerTests.Handle_sin_archivo_lanza_EVIDENCIA_ARCHIVO_REQUERIDO` | DESIGN | |
-| `ConfirmarEntregaHandlerTests.Handle_con_archivo_guarda_la_evidencia_y_la_url_queda_en_la_constancia` | DESIGN | |
+| `CrearRutaCommandHandlerTests.Handle_repartidor_sin_capacidad_lanza_I2_REPARTIDOR_NO_DISPONIBLE` | DESIGN | Hecho |
+| `CrearRutaCommandHandlerTests.Handle_paquete_no_esta_POR_ASIGNAR_lanza_I9_PAQUETE_YA_ASIGNADO` | DESIGN | Hecho |
+| `CrearRutaCommandHandlerTests.Handle_paquete_con_fecha_distinta_lanza_I10_PAQUETES_FECHA_DISTINTA` | DESIGN | Hecho |
+| `CrearRutaCommandHandlerTests.Handle_repartidor_con_ruta_activa_lanza_I11_REPARTIDOR_CON_RUTA_ACTIVA` | DESIGN | Hecho |
+| `CrearRutaCommandHandlerTests.Handle_repartidor_inexistente_lanza_REPARTIDOR_NO_ENCONTRADO` | DESIGN | Hecho |
+| `CrearRutaCommandHandlerTests.Handle_caso_feliz_crea_la_ruta_asigna_al_repartidor_y_marca_los_paquetes` | DESIGN | Hecho |
+| `ConfirmarEntregaHandlerTests.Handle_sin_archivo_lanza_EVIDENCIA_ARCHIVO_REQUERIDO` | DESIGN | Hecho |
+| `ConfirmarEntregaHandlerTests.Handle_con_archivo_guarda_la_evidencia_y_la_url_queda_en_la_constancia` | DESIGN | Hecho |
 
 **Idempotencia del endpoint de integración — 5**
 
 | Test | Origen | Estado |
 |---|---|---|
-| `ProcesarPaquetesListosCommandHandlerTests.Handle_reprocesar_el_mismo_paqueteId_no_duplica_I12` | DESIGN | |
-| `ProcesarPaquetesListosCommandHandlerTests.Handle_paquete_con_PacienteId_vacio_lanza_PAQUETE_LISTO_PACIENTE_ID_REQUERIDO` | DESIGN | |
-| `ProcesarPaquetesListosCommandHandlerTests.Handle_paquete_con_ContratoCateringId_vacio_lanza_PAQUETE_LISTO_CONTRATO_CATERING_REQUERIDO` | DESIGN | |
-| `ProcesarPaquetesListosCommandHandlerTests.Handle_paquete_valido_upsertea_un_PaqueteRecibido_mapeado_correctamente` | DESIGN | |
-| `ProcesarPaquetesListosCommandHandlerTests.Handle_procesa_todos_los_paquetes_del_lote` | DESIGN | |
+| `ProcesarPaquetesListosCommandHandlerTests.Handle_reprocesar_el_mismo_paqueteId_no_duplica_I12` | DESIGN | Hecho |
+| `ProcesarPaquetesListosCommandHandlerTests.Handle_paquete_con_PacienteId_vacio_lanza_PAQUETE_LISTO_PACIENTE_ID_REQUERIDO` | DESIGN | Hecho |
+| `ProcesarPaquetesListosCommandHandlerTests.Handle_paquete_con_ContratoCateringId_vacio_lanza_PAQUETE_LISTO_CONTRATO_CATERING_REQUERIDO` | DESIGN | Hecho |
+| `ProcesarPaquetesListosCommandHandlerTests.Handle_paquete_valido_upsertea_un_PaqueteRecibido_mapeado_correctamente` | DESIGN | Hecho |
+| `ProcesarPaquetesListosCommandHandlerTests.Handle_procesa_todos_los_paquetes_del_lote` | DESIGN | Hecho |
 
 **Políticas — 6**
 
 | Test | Origen | Estado |
 |---|---|---|
-| `LiberarRepartidorAlCompletarRutaPolicyTests.Handle_libera_al_repartidor_de_la_ruta_completada` | DESIGN | |
-| `LiberarRepartidorAlCompletarRutaPolicyTests.Handle_sin_repartidor_lanza_REPARTIDOR_NO_ENCONTRADO` | DESIGN | |
-| `LiberarRepartidorAlCancelarRutaPolicyTests.Handle_libera_al_repartidor_de_la_ruta_cancelada` | DESIGN | |
-| `LiberarRepartidorAlCancelarRutaPolicyTests.Handle_sin_repartidor_lanza_REPARTIDOR_NO_ENCONTRADO` | DESIGN | |
-| `ReponerPaquetesAlCancelarRutaPolicyTests.Handle_marca_por_asignar_los_paquetes_no_resueltos` | DESIGN | |
-| `ReponerPaquetesAlCancelarRutaPolicyTests.Handle_sin_paquetes_no_resueltos_no_marca_nada` | DESIGN | |
+| `LiberarRepartidorAlCompletarRutaPolicyTests.Handle_libera_al_repartidor_de_la_ruta_completada` | DESIGN | Hecho |
+| `LiberarRepartidorAlCompletarRutaPolicyTests.Handle_sin_repartidor_lanza_REPARTIDOR_NO_ENCONTRADO` | DESIGN | Hecho |
+| `LiberarRepartidorAlCancelarRutaPolicyTests.Handle_libera_al_repartidor_de_la_ruta_cancelada` | DESIGN | Hecho |
+| `LiberarRepartidorAlCancelarRutaPolicyTests.Handle_sin_repartidor_lanza_REPARTIDOR_NO_ENCONTRADO` | DESIGN | Hecho |
+| `ReponerPaquetesAlCancelarRutaPolicyTests.Handle_marca_por_asignar_los_paquetes_no_resueltos` | DESIGN | Hecho |
+| `ReponerPaquetesAlCancelarRutaPolicyTests.Handle_sin_paquetes_no_resueltos_no_marca_nada` | DESIGN | Hecho |
 
 ### 4.4 Contratos de eventos (§15.3) — 6 tests
 
 | Test | Origen | Estado |
 |---|---|---|
-| `PublicarRutaOptimizadaGeneradaHandlerTests.Handle_publica_RutaOptimizadaGeneradaIntegrationEvent_con_el_payload_de_SISTEMA_8_12` | DESIGN | |
-| `PublicarEntregaConfirmadaHandlerTests.Handle_publica_EntregaConfirmadaIntegrationEvent_con_el_payload_de_SISTEMA_8_13` | DESIGN | |
-| `PublicarEntregaConfirmadaHandlerTests.Handle_sin_coordenadas_de_confirmacion_publica_CoordenadasConfirmacion_null` | DESIGN | |
-| `PublicarIncidenciaEntregaRegistradaHandlerTests.Handle_publica_IncidenciaEntregaRegistradaIntegrationEvent_con_el_payload_de_SISTEMA_8_14` | DESIGN | |
-| `PublicarIncidenciaEntregaRegistradaHandlerTests.Handle_sin_foto_publica_UrlFoto_null` | DESIGN | |
+| `PublicarRutaOptimizadaGeneradaHandlerTests.Handle_publica_RutaOptimizadaGeneradaIntegrationEvent_con_el_payload_de_SISTEMA_8_12` | DESIGN | Hecho |
+| `PublicarEntregaConfirmadaHandlerTests.Handle_publica_EntregaConfirmadaIntegrationEvent_con_el_payload_de_SISTEMA_8_13` | DESIGN | Hecho |
+| `PublicarEntregaConfirmadaHandlerTests.Handle_sin_coordenadas_de_confirmacion_publica_CoordenadasConfirmacion_null` | DESIGN | Hecho |
+| `PublicarIncidenciaEntregaRegistradaHandlerTests.Handle_publica_IncidenciaEntregaRegistradaIntegrationEvent_con_el_payload_de_SISTEMA_8_14` | DESIGN | Hecho |
+| `PublicarIncidenciaEntregaRegistradaHandlerTests.Handle_sin_foto_publica_UrlFoto_null` | DESIGN | Hecho |
 | `ProcesarPaquetesListosCommandHandlerTests.Handle_paquete_valido_upsertea_un_PaqueteRecibido_mapeado_correctamente` (mismo test que en 4.3 — el DTO de entrada **es** el contrato, §11.8 DESIGN.md; no se duplica en el conteo de la suite) | DESIGN | |
 
 ### 4.5 Gap detectado contra el código real (no listado en `DESIGN.md` §15.2)
@@ -349,14 +349,14 @@ en una futura revisión.
 
 | Test propuesto | Handler | Código / `ErrorType` | Estado |
 |---|---|---|---|
-| `ConfirmarEntregaHandlerTests.Handle_ruta_inexistente_lanza_RUTA_NO_ENCONTRADA` | `ConfirmarEntregaCommandHandler` | `RUTA_NO_ENCONTRADA` / NotFound | |
-| `ConfirmarEntregaHandlerTests.Handle_extension_no_permitida_lanza_EVIDENCIA_EXTENSION_NO_PERMITIDA` | `ConfirmarEntregaCommandHandler` | `EVIDENCIA_EXTENSION_NO_PERMITIDA` / Validation | |
-| `ConfirmarEntregaHandlerTests.Handle_archivo_excede_el_tamano_maximo_lanza_EVIDENCIA_TAMANO_EXCEDIDO` | `ConfirmarEntregaCommandHandler` | `EVIDENCIA_TAMANO_EXCEDIDO` / Validation | |
-| `ReportarIncidenciaHandlerTests.Handle_ruta_inexistente_lanza_RUTA_NO_ENCONTRADA` | `ReportarIncidenciaCommandHandler` | `RUTA_NO_ENCONTRADA` / NotFound | |
-| `ReportarIncidenciaHandlerTests.Handle_extension_no_permitida_lanza_EVIDENCIA_EXTENSION_NO_PERMITIDA` | `ReportarIncidenciaCommandHandler` | `EVIDENCIA_EXTENSION_NO_PERMITIDA` / Validation | |
-| `ReportarIncidenciaHandlerTests.Handle_archivo_excede_el_tamano_maximo_lanza_EVIDENCIA_TAMANO_EXCEDIDO` | `ReportarIncidenciaCommandHandler` | `EVIDENCIA_TAMANO_EXCEDIDO` / Validation | |
-| `ReportarIncidenciaHandlerTests.Handle_con_foto_guarda_la_evidencia_y_la_url_queda_en_la_incidencia` | `ReportarIncidenciaCommandHandler` | caso feliz, con foto | |
-| `ReportarIncidenciaHandlerTests.Handle_sin_foto_registra_la_incidencia_con_UrlFoto_null` | `ReportarIncidenciaCommandHandler` | caso feliz, sin foto | |
+| `ConfirmarEntregaHandlerTests.Handle_ruta_inexistente_lanza_RUTA_NO_ENCONTRADA` | `ConfirmarEntregaCommandHandler` | `RUTA_NO_ENCONTRADA` / NotFound | Hecho |
+| `ConfirmarEntregaHandlerTests.Handle_extension_no_permitida_lanza_EVIDENCIA_EXTENSION_NO_PERMITIDA` | `ConfirmarEntregaCommandHandler` | `EVIDENCIA_EXTENSION_NO_PERMITIDA` / Validation | Hecho |
+| `ConfirmarEntregaHandlerTests.Handle_archivo_excede_el_tamano_maximo_lanza_EVIDENCIA_TAMANO_EXCEDIDO` | `ConfirmarEntregaCommandHandler` | `EVIDENCIA_TAMANO_EXCEDIDO` / Validation | Hecho |
+| `ReportarIncidenciaHandlerTests.Handle_ruta_inexistente_lanza_RUTA_NO_ENCONTRADA` | `ReportarIncidenciaCommandHandler` | `RUTA_NO_ENCONTRADA` / NotFound | Hecho |
+| `ReportarIncidenciaHandlerTests.Handle_extension_no_permitida_lanza_EVIDENCIA_EXTENSION_NO_PERMITIDA` | `ReportarIncidenciaCommandHandler` | `EVIDENCIA_EXTENSION_NO_PERMITIDA` / Validation | Hecho |
+| `ReportarIncidenciaHandlerTests.Handle_archivo_excede_el_tamano_maximo_lanza_EVIDENCIA_TAMANO_EXCEDIDO` | `ReportarIncidenciaCommandHandler` | `EVIDENCIA_TAMANO_EXCEDIDO` / Validation | Hecho |
+| `ReportarIncidenciaHandlerTests.Handle_con_foto_guarda_la_evidencia_y_la_url_queda_en_la_incidencia` | `ReportarIncidenciaCommandHandler` | caso feliz, con foto | Hecho |
+| `ReportarIncidenciaHandlerTests.Handle_sin_foto_registra_la_incidencia_con_UrlFoto_null` | `ReportarIncidenciaCommandHandler` | caso feliz, sin foto | Hecho |
 
 ---
 
