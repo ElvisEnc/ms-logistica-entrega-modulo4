@@ -1,25 +1,25 @@
 Summary
-  Generated on: 27/9/2026 - 02:53:22
-  Coverage date: 27/9/2026 - 02:53:20
-  Parser: MultiReport (2x Cobertura)
+  Generated on: 27/9/2026 - 05:55:18
+  Coverage date: 27/9/2026 - 05:54:53 - 27/9/2026 - 05:55:17
+  Parser: MultiReport (3x Cobertura)
   Assemblies: 2
   Classes: 73
   Files: 73
-  Line coverage: 84.1%
-  Covered lines: 551
-  Uncovered lines: 104
+  Line coverage: 93.8%
+  Covered lines: 615
+  Uncovered lines: 40
   Coverable lines: 655
   Total lines: 1762
   Branch coverage: 93.7% (105 of 112)
   Covered branches: 105
   Total branches: 112
-  Method coverage: 82.9% (146 of 176)
-  Full method coverage: 81.8% (144 of 176)
-  Covered methods: 146
-  Fully covered methods: 144
+  Method coverage: 92.6% (163 of 176)
+  Full method coverage: 92% (162 of 176)
+  Covered methods: 163
+  Fully covered methods: 162
   Total methods: 176
 
-Logistica.Application                                                                                 64%
+Logistica.Application                                                                               86.9%
   Logistica.Application.IntegrationEvents.ConstanciaDto                                              100%
   Logistica.Application.IntegrationEvents.DireccionGeoDto                                            100%
   Logistica.Application.IntegrationEvents.EntregaConfirmadaIntegrationEvent                          100%
@@ -31,10 +31,10 @@ Logistica.Application                                                           
   Logistica.Application.IntegrationEvents.RutaOptimizadaGeneradaIntegrationEvent                     100%
   Logistica.Application.PaquetesRecibidos.PaqueteRecibidoErrors                                      100%
   Logistica.Application.PaquetesRecibidos.ProcesarPaquetesListosCommandHandler                       100%
-  Logistica.Application.PaquetesRecibidos.Queries.PaqueteRecibidoDto                                   0%
+  Logistica.Application.PaquetesRecibidos.Queries.PaqueteRecibidoDto                                 100%
   Logistica.Application.Repartidores.Queries.RepartidorDto                                             0%
-  Logistica.Application.Repartidores.RegistrarRepartidor.RegistrarRepartidorCommand                    0%
-  Logistica.Application.Repartidores.RegistrarRepartidor.RegistrarRepartidorCommandHandler             0%
+  Logistica.Application.Repartidores.RegistrarRepartidor.RegistrarRepartidorCommand                  100%
+  Logistica.Application.Repartidores.RegistrarRepartidor.RegistrarRepartidorCommandHandler           100%
   Logistica.Application.Rutas.CancelarRuta.CancelarRutaCommandHandler                                  0%
   Logistica.Application.Rutas.CompletarRuta.CompletarRutaCommandHandler                                0%
   Logistica.Application.Rutas.ConfirmarEntrega.ConfirmarEntregaCommand                               100%
@@ -42,28 +42,28 @@ Logistica.Application                                                           
   Logistica.Application.Rutas.CrearRuta.CrearRutaCommand                                             100%
   Logistica.Application.Rutas.CrearRuta.CrearRutaCommandHandler                                      100%
   Logistica.Application.Rutas.EvidenciaArchivoValidator                                              100%
-  Logistica.Application.Rutas.IniciarRuta.IniciarRutaCommandHandler                                    0%
+  Logistica.Application.Rutas.IniciarRuta.IniciarRutaCommandHandler                                  100%
   Logistica.Application.Rutas.IntegrationEventHandlers.DomainToIntegrationMapper                     100%
   Logistica.Application.Rutas.IntegrationEventHandlers.PublicarEntregaConfirmadaHandler              100%
   Logistica.Application.Rutas.IntegrationEventHandlers.PublicarIncidenciaEntregaRegistradaHandler    100%
   Logistica.Application.Rutas.IntegrationEventHandlers.PublicarRutaOptimizadaGeneradaHandler         100%
-  Logistica.Application.Rutas.OptimizarRuta.OptimizarRutaCommand                                       0%
-  Logistica.Application.Rutas.OptimizarRuta.OptimizarRutaCommandHandler                                0%
+  Logistica.Application.Rutas.OptimizarRuta.OptimizarRutaCommand                                     100%
+  Logistica.Application.Rutas.OptimizarRuta.OptimizarRutaCommandHandler                              100%
   Logistica.Application.Rutas.Policies.LiberarRepartidorAlCancelarRutaPolicy                         100%
   Logistica.Application.Rutas.Policies.LiberarRepartidorAlCompletarRutaPolicy                        100%
   Logistica.Application.Rutas.Policies.ReponerPaquetesAlCancelarRutaPolicy                           100%
-  Logistica.Application.Rutas.Queries.ConstanciaEntregaDto                                             0%
+  Logistica.Application.Rutas.Queries.ConstanciaEntregaDto                                           100%
   Logistica.Application.Rutas.Queries.EstadoEntregaDto                                                 0%
   Logistica.Application.Rutas.Queries.GetHistorialConstanciasQuery                                     0%
   Logistica.Application.Rutas.Queries.HistorialConstanciaDto                                           0%
-  Logistica.Application.Rutas.Queries.IncidenciaEntregaDto                                             0%
-  Logistica.Application.Rutas.Queries.ParadaDetalleDto                                                 0%
-  Logistica.Application.Rutas.Queries.RutaDetalleDto                                                   0%
+  Logistica.Application.Rutas.Queries.IncidenciaEntregaDto                                           100%
+  Logistica.Application.Rutas.Queries.ParadaDetalleDto                                               100%
+  Logistica.Application.Rutas.Queries.RutaDetalleDto                                                 100%
   Logistica.Application.Rutas.ReportarIncidencia.ReportarIncidenciaCommand                           100%
   Logistica.Application.Rutas.ReportarIncidencia.ReportarIncidenciaCommandHandler                    100%
 
-Logistica.Domain                                                                                      96%
-  Logistica.Domain.Repartidores.Repartidor                                                          96.1%
+Logistica.Domain                                                                                      98%
+  Logistica.Domain.Repartidores.Repartidor                                                           100%
   Logistica.Domain.Repartidores.RepartidorErrors                                                     100%
   Logistica.Domain.Rutas.Events.EntregaConfirmada                                                    100%
   Logistica.Domain.Rutas.Events.IncidenciaEntregaRegistrada                                          100%
@@ -73,18 +73,18 @@ Logistica.Domain                                                                
   Logistica.Domain.Rutas.Events.RutaOptimizadaGenerada                                               100%
   Logistica.Domain.Rutas.PaqueteParaRuta                                                             100%
   Logistica.Domain.Rutas.PaqueteParaRutaErrors                                                       100%
-  Logistica.Domain.Rutas.ParadaEntrega                                                              97.4%
+  Logistica.Domain.Rutas.ParadaEntrega                                                               100%
   Logistica.Domain.Rutas.ParadaEntregaErrors                                                         100%
-  Logistica.Domain.Rutas.RutaEntrega                                                                95.9%
+  Logistica.Domain.Rutas.RutaEntrega                                                                96.9%
   Logistica.Domain.Rutas.RutaErrors                                                                 83.3%
-  Logistica.Domain.Shared.ConstanciaEntrega                                                         90.9%
+  Logistica.Domain.Shared.ConstanciaEntrega                                                         95.4%
   Logistica.Domain.Shared.ConstanciaEntregaErrors                                                    100%
   Logistica.Domain.Shared.ContratoId                                                                 100%
-  Logistica.Domain.Shared.Coordenadas                                                               92.8%
+  Logistica.Domain.Shared.Coordenadas                                                                100%
   Logistica.Domain.Shared.CoordenadasErrors                                                          100%
-  Logistica.Domain.Shared.DireccionGeo                                                              96.8%
+  Logistica.Domain.Shared.DireccionGeo                                                               100%
   Logistica.Domain.Shared.DireccionGeoErrors                                                         100%
-  Logistica.Domain.Shared.IncidenciaEntrega                                                         85.7%
+  Logistica.Domain.Shared.IncidenciaEntrega                                                         92.8%
   Logistica.Domain.Shared.IncidenciaEntregaErrors                                                    100%
   Logistica.Domain.Shared.PacienteId                                                                 100%
   Logistica.Domain.Shared.PaqueteId                                                                  100%
@@ -93,5 +93,5 @@ Logistica.Domain                                                                
   Logistica.Domain.Shared.RutaId                                                                     100%
   Logistica.Domain.Shared.SharedErrors                                                               100%
   Logistica.Domain.Shared.TypedIdValidator                                                           100%
-  Logistica.Domain.Shared.Vehiculo                                                                  93.7%
+  Logistica.Domain.Shared.Vehiculo                                                                   100%
   Logistica.Domain.Shared.VehiculoErrors                                                             100%

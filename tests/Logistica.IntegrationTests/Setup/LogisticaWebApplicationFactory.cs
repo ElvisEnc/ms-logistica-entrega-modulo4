@@ -1,3 +1,4 @@
+using Logistica.Application.Abstractions;
 using Logistica.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -13,6 +14,10 @@ public sealed class LogisticaWebApplicationFactory : WebApplicationFactory<Progr
     private readonly PostgreSqlContainer _postgres = new PostgreSqlBuilder("postgres:16")
         .Build();
 
+    // IT-04: publicador capturador accesible desde los tests para afirmar eventos.
+    public CapturingIntegrationEventPublisher Publisher =>
+        Services.GetRequiredService<CapturingIntegrationEventPublisher>();
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureServices(services =>
@@ -20,6 +25,14 @@ public sealed class LogisticaWebApplicationFactory : WebApplicationFactory<Progr
             services.RemoveAll<DbContextOptions<LogisticaDbContext>>();
             services.AddDbContext<LogisticaDbContext>(options =>
                 options.UseNpgsql(_postgres.GetConnectionString()));
+
+            // IT-04: sustituir LoggingIntegrationEventPublisher por el publicador capturador.
+            // Se registra como Singleton para que la misma instancia sea accesible desde Services
+            // y desde todos los scopes de request.
+            services.RemoveAll<IIntegrationEventPublisher>();
+            services.AddSingleton<CapturingIntegrationEventPublisher>();
+            services.AddSingleton<IIntegrationEventPublisher>(sp =>
+                sp.GetRequiredService<CapturingIntegrationEventPublisher>());
         });
     }
 
